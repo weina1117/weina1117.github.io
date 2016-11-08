@@ -1,13 +1,11 @@
-
 ---
 layout: post
 title: My keypresses on daily basis-day 1 
 ---
 
-![sample post]({{site.baseurl}}/images/image-vim life.png)
+![sample post]({{site.baseurl}}/images/vim-life.png)
 
 #### Today I'm trying to swich from Textmate to MacVim, here I'm creating an reference of the new commands I've learned as follow:
-
 
 | Keypresses           |Notes                       | 
 | -------------------- |:--------------------------:| 
