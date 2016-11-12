@@ -60,6 +60,7 @@ title: Algorithm 4th
 
 **Find** Identical to quick-union.
 **Union** Modify quick-union to:
+
 * Link root of smaller tree to root of larger tree.
 * Update the sz[] array.
 
@@ -74,6 +75,7 @@ title: Algorithm 4th
 ### **Analysis of Algorithms**
 
  Here is the issues from the poin of view of different types of characters:
+
 * Programmer needs to develop a working solution.
 * Client wants to solve problem efficiently.
 * Theoretician wants to understand.
