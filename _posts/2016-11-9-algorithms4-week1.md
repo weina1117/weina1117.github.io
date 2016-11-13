@@ -3,70 +3,70 @@ layout: post
 title: Algorithm 4th  
 --- 
 
-### ** Two Classic Algorithm **
+### **Two Classic Algorithm**
 
-#### ** Quick-find **
+#### **Quick-find**
 
-##### ** Data Structure **
+##### **Data Structure**
 
 * Integer Array id[] of size N
 * Interpretation: p and q are connected if and only if they have the same id.
 
 ##### This is so called eager algorithm,for solving kind activity problem.
 
-** Find ** Check if p and q have the same id.
-** Union ** To merge components containing p and q,change all entries whose id equals id[p] to id[q].
+**Find** Check if p and q have the same id.
+**Union** To merge components containing p and q,change all entries whose id equals id[p] to id[q].
 
-** Cost model **
+**Cost model**
 
  | algorithm | initialize | union | find |
  | --------- |:----------:|:-----:|-----:|
  |quick-find |      N     |   N   |   1  |
 
 
-#### ** Quick-union **
+#### **Quick-union**
 
-##### ** Data Structure **
+##### **Data Structure**
 
 * Integer Array id[] of size N
 * Interpretation: id[i] is parent of i.
 * Root of i is id[id[id[...id[i]...]]].
 
-** Find ** Check if p and q have the same root.
-** Union ** To merge components containing p and q, set the id of p's root to the id of q's root.
+**Find** Check if p and q have the same root.
+**Union** To merge components containing p and q, set the id of p's root to the id of q's root.
 
-** Cost model **
+**Cost model**
 
  | algorithm | initialize | union | find |
  | --------- |:----------:|:-----:|-----:|
  |quick-find |      N     |   N   |   1  |
  |quick-union|      N     |   N   |   N  | <--worst case
 
-#### ** Quick-find defect **
+#### **Quick-find defect**
 
 * Union too expensive(N array accesses).
 * Trees are flat, but too expensive to keep them flat.
 
-#### ** Quick-union defect **
+#### **Quick-union defect**
 
 * Trees can get tall.
 * Find too expensive(could be N array accesses).
 
-#### ** Improvements ** Weighted quick-union
+#### **Improvements** Weighted quick-union
 
 ##### Weighted quick-union
 
-##### ** Data Structure **
+##### **Data Structure**
 
  Same as quick-union, but maintain extra array sz[i] to count number of objects in the tree rooted at i.
 
-** Find ** Identical to quick-union.
-** Union ** Modify quick-union to:
+**Find**Identical to quick-union.
+**Union** Modify quick-union to:
 
 * Link root of smaller tree to root of larger tree.
 * Update the sz[] array.
 
-** Cost model **
+**Cost model**
 
  | algorithm | initialize | union | find |
  |-----------|------------|-------|------|
@@ -74,7 +74,7 @@ title: Algorithm 4th
  |quick-union|      N     |   N   |   N  | 
  |weighted QU|      N     |  lgN  | lgN  |
 
-### ** Analysis of Algorithms **
+### **Analysis of Algorithms**
 
  Here is the issues from the poin of view of different types of characters:
 
