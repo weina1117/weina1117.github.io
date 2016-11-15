@@ -40,7 +40,7 @@ title: Algorithm 4th
  | algorithm | initialize | union | find |
  | --------- |:----------:|:-----:|-----:|
  |quick-find |      N     |   N   |   1  |
- |quick-union|      N     |   N   |   N  | <--worst case
+ |quick-union|      N     |tree height|tree height| <--worst case
 
 #### **Quick-find defect**
 
@@ -71,7 +71,7 @@ title: Algorithm 4th
  | algorithm | initialize | union | find |
  |-----------|------------|-------|------|
  |quick-find |      N     |   N   |   1  |
- |quick-union|      N     |   N   |   N  | 
+ |quick-union|      N     |tree height|tree height| 
  |weighted QU|      N     |  lgN  | lgN  |
 
 ### **Analysis of Algorithms**
