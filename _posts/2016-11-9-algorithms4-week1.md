@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Algorithm 4th  
+title: Algorithm 4th chapter 1 
 --- 
 
 ### **Two Classic Algorithm**
