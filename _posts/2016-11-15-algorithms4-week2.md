@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Algorithm 4th  
+title: Algorithm 4th chapter 2
 ---
 
 ### **Bags, Queues and Stacks**
