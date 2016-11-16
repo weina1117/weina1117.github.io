@@ -3,27 +3,30 @@ layout: post
 title: Algorithm 4th chapter 2
 ---
 
-### **Bags, Queues and Stacks**
+Bags, Queues and Stacks
+=======================
 
-##### Fundamental data types
+Fundamental data types
+----------------------
 
 * Value: collection of objects.
 * Operations: insert, remove, iterate, test if empty.
 
-##### Stack Examine the item most recently added. <---LIFO = "last in first out"
+Stack Examine the item most recently added. <---LIFO = "last in first out"
 
-##### Queue Examine the item least recently added. <---FIFO = "first in first out"
+Queue Examine the item least recently added. <---FIFO = "first in first out"
 
-#### **stacks**
+### stacks
 
-##### Arrary implementation of a stack.
+#### Arrary implementation of a stack.
+
 * Use array s[] to store N items on stack.
 * push(): add new item at s[N].
 * pop(): remove item from s[N-1].
 
-##### Defect. Stack overflows when N exceeds capacity.
+Defect. Stack overflows when N exceeds capacity.
 
-##### Overflow and underflow.
+#### Overflow and underflow.
 
 * Underflow: throw exception if pop from an empty stack.
 
@@ -48,9 +51,9 @@ title: Algorithm 4th chapter 2
 * Every operation take constant amortized time.
 * Less waste space.
 
-#### **queues**
+### queues
 
-##### Array implementation of a queue.
+#### Array implementation of a queue.
 
 * Use array q[] to store items in queue.
 * enqueue(): add new item at q[tail].
@@ -58,13 +61,13 @@ title: Algorithm 4th chapter 2
 * Update head and tail modulo the capacity.
 * Add resizing array.
 
-#### **generics**
+#### generics
 
-#### **iterators**
+#### iterators
 
-#### **applications**
+#### applications
 
-Dijkstra's two-stack algorithm.
+#### Dijkstra's two-stack algorithm.
 
 * Value: push onto value stack.
 * Operator: push onto operator stack.
