@@ -1,10 +1,7 @@
 ---
 layout: post
-title: Algorithm 4th chapter 2
+title: Algorithm 4th chapter 2 - Bags, Queues and Stacks
 ---
-
-Bags, Queues and Stacks
-=======================
 
 Fundamental data types
 ----------------------
@@ -12,9 +9,9 @@ Fundamental data types
 * Value: collection of objects.
 * Operations: insert, remove, iterate, test if empty.
 
-Stack Examine the item most recently added. <---LIFO = "last in first out"
+Stack Examine the item most recently added. <---LIFO = **last in first out**
 
-Queue Examine the item least recently added. <---FIFO = "first in first out"
+Queue Examine the item least recently added. <---FIFO = **first in first out**
 
 ### stacks
 
