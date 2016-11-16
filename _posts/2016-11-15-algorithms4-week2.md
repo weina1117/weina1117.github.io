@@ -5,14 +5,14 @@ title: Algorithm 4th
 
 ### **Bags, Queues and Stacks**
 
-##### **Fundamental data types**
+##### Fundamental data types
 
 * Value: collection of objects.
 * Operations: insert, remove, iterate, test if empty.
 
-##### **Stack** Examine the item most recently added. <---LIFO = "last in first out"
+##### Stack Examine the item most recently added. <---LIFO = "last in first out"
 
-#####**Queue** Examine the item least recently added. <---FIFO = "first in first out"
+##### Queue Examine the item least recently added. <---FIFO = "first in first out"
 
 #### **stacks**
 
@@ -29,7 +29,7 @@ title: Algorithm 4th
 
 * Overflow: use resizing array for array implementation.
 
-#### **resizing arrays** 
+#### resizing arrays
 
  |           |    best    | worst | amortized |
  |-----------|------------|-------|-----------|
@@ -38,7 +38,7 @@ title: Algorithm 4th
  |pop        |      1     |   N   |     1     |
  |size       |      1     |   1   |     1     |
 
-##### **resizing array vs. linked list**
+##### resizing array vs. linked list
 
 ##### Linked-list implementation.
 * Every operation takes constant time in the worst case.
@@ -50,7 +50,7 @@ title: Algorithm 4th
 
 #### **queues**
 
-##### **Array implementation of a queue.
+##### Array implementation of a queue.
 
 * Use array q[] to store items in queue.
 * enqueue(): add new item at q[tail].
