@@ -1,0 +1,47 @@
+---
+layout: post
+title: Just familiar with github
+---
+
+0 A little imporvement for team work in version control systerm
+---------------------------------------------------------------
+
+This article will walk you through a basic and simple developer Git workfolw. (0-2 is basic intorductions, the rest of this article will take the actual example operation) Simply say git is a tool which allowed us to manage our multiple sources. Git thinks like a set of snapshort of a miniature filmsystem instead of our traditional stored systerm that take the information as a list of file-based changes. So everytime we use git to manage our information please don't forgot to store the snapshorts away.
+
+1 Four component of git workfolw
+--------------------------------
+
+[sample post]({{site.baseurl}}/images/git.png)
+
+> * Working Directory, say this is currently working space.Take online shopping as example, that will be the browsing webpages.
+
+> * Stage(Index), contiue our simply example this is so called shopping cart. At this stage, we could feel free to add or chechour the seclected goods since we haven't paid yet ^^ 
+
+> * Repository, after we submmit our order (here we called `commit`) we arrived our snapshort stage which we can check in our local unpaid shopping list.
+
+> * Remote, say  we picked the unpaid shoppling list to pay (`push`), then the merchant have received our payment sucessfully, they will delivery the goods to the correct address you previous seted.Finally we finished our online consumption.
+
+Now, pay attention. During the above prcessing we learnt that there is three main steps. This is the main thing to remember about git if you want the rest of your learning process to go smoothly. Git has three main states that your files can reside in: committed, modified, and staged. Committed means that the data is safely stored in your local database. Modified means that you have changed the file but have not committed it to your database yet. Staged means that you have marked a modified file in its current version to go into your next commit snapshot.
+
+2 Four file status lifecycle in git
+------------------------------------
+
+[sample post]({{site.baseurl}}/images/git.jpg)
+
+later in details.
+
+3 Get started
+-------------
+
+####command covered in this section
+
+> `cd` - **c**hang **d**irectory, this is allows you to navigating around the file systerm.
+>
+> `ls` - **l**i**s**t the files in the current directory.
+> 
+> `git init` - **init**ialise(create) a repository.
+>
+> `git cole` - copy an existing repository.
+
+Here we have two ways to start working on git repository: you can either create a new one or copy an existing repository from elsewhere.
+
