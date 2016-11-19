@@ -11,7 +11,7 @@ This article will walk you through a basic and simple developer Git workfolw. (0
 1 Four component of git workfolw
 --------------------------------
 
-[sample post]({{site.baseurl}}/images/git.png)
+![sample post]({{site.baseurl}}/images/git.png)
 
 > * Working Directory, say this is currently working space.Take online shopping as example, that will be the browsing webpages.
 
@@ -26,14 +26,14 @@ Now, pay attention. During the above prcessing we learnt that there is three mai
 2 Four file status lifecycle in git
 ------------------------------------
 
-[sample post]({{site.baseurl}}/images/git.jpg)
+![sample post]({{site.baseurl}}/images/git.jpg)
 
 later in details.
 
 3 Get started
 -------------
 
-####command covered in this section
+#### command covered in this section
 
 > `cd` - **c**hang **d**irectory, this is allows you to navigating around the file systerm.
 >
