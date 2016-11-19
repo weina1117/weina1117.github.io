@@ -20,7 +20,7 @@ terminal, if the output is `/bin/bash`, that means your shell is bash.
   exists); otherwise create a file and add it to the file `~/.profile`(create it
 first):
 
-```bash 
+```sh 
 $ export CLASSPATH=$CALSSPATH:/Users/weinaguo/Workspace/algs4.jar:/Users/weinaguo/Workspace/edu.princeton.cs.algs4
 ```
 
@@ -30,7 +30,7 @@ $ export CLASSPATH=$CALSSPATH:/Users/weinaguo/Workspace/algs4.jar:/Users/weinagu
   here:
 
 you will see `package edu.princeton.cs.algs4` that shoul be change to
-`import edu.princeton.cs.algs4.\*`
+`import edu.princeton.cs.algs4.*`
 
 * and then, you can write your java code here. saved and quit after you done.
 
@@ -38,8 +38,8 @@ you will see `package edu.princeton.cs.algs4` that shoul be change to
 ----------------------
 To compile the program, we can use the following command:
 
-```bash
-	$ javac BinarySearch.java 
+```sh
+$ javac BinarySearch.java 
 ```
 
 (here we take BinarySearch for example). After the set up steps, you will be
@@ -49,7 +49,7 @@ compiling successful.
 ---------------------
 
 * input the file and run it 
-```bash 
+```sh 
 $ java BinarySearch 
 ```
 
