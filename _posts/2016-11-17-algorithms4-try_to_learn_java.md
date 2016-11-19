@@ -49,6 +49,7 @@ compiling successful.
 ---------------------
 
 * input the file and run it 
+
 ```sh 
 $ java BinarySearch 
 ```
