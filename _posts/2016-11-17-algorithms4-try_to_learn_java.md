@@ -5,9 +5,8 @@ title: How to set up java programming environment
 
 This document instructs you on how to set up java programming environment for
 Macbook by iterm. It provides a step-by-step guide for creating, compiling and
-exacuting my first java program using iterm.  Here I take the example from 
-[Algorithms 4th Edition](http://algs4.cs.princeton.edu/). And the [Java code](http://algs4.cs.princeton.edu/code/) 
-of this book is given.
+exacuting the example java program, the example from [Algorithms 4th Edition](http://algs4.cs.princeton.edu/). 
+Most of [Java code](http://algs4.cs.princeton.edu/code/) of this book has given.
 
 0 Install the programming Environment 
 -------------------------------------
