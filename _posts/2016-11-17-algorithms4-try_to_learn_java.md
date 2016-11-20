@@ -30,11 +30,11 @@ Here is some basic commands covered in this section:
 $ cd ~/Workspace/edu.priceton.cs.algs4/
 ```
 
-* then, get the file [RandomSeq.java]( http://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/RandomSeq.java)
+* then, get the file [BinarySearch.java]( http://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/BinarySearch.java)
 through `wget` command add the link address from the book(algs4)
 
 ```sh
-$ wget http://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/RandomSeq.java
+$ wget http://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/BinarySearch.java
 ```
 
 * vim to the file, here should be noticed that you should change something in
@@ -49,6 +49,13 @@ the comipling class file through file name
 $ export CLASSPATH=$CALSSPATH:/Users/weinaguo/Workspace/algs4.jar:/Users/weinaguo/Workspace/edu.princeton.cs.algs4
 ```
 
+The first part of this file is introductions, here we can easily find the link 
+address of the data file. We still need to get this data file through `wget`
+
+```sh
+$ wget http://algs4.cs.princeton.edu/11model/tinyW.txt
+``` 
+
 * and then, you can write your java code here. saved and quit after you done.
 
 1 Compile the program 
@@ -56,7 +63,7 @@ $ export CLASSPATH=$CALSSPATH:/Users/weinaguo/Workspace/algs4.jar:/Users/weinagu
 To compile the program, we can use the following command:
 
 ```sh
-$ javac RandomSeq.java 
+$ javac BinarySearch.java 
 ```
 
 After the set up steps, you will compiling successful.
@@ -64,10 +71,10 @@ After the set up steps, you will compiling successful.
 2 Exacute the program 
 ---------------------
 
-* input the file and run it 
+* input the data file and run it 
 
 ```sh 
-$ java RandomSeq. 
+$ java BinarySearch < tinyW.txt 
 ```
 
 Classpath is the connection between the java runtime and the filesystem. 
