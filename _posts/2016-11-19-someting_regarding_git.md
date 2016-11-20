@@ -8,7 +8,7 @@ title: Just familiar with github
 
 This article will walk you through a basic and simple developer Git workfolw. (0-2 is basic intorductions, the rest of this article will take the actual example operation) Simply say git is a tool which allowed us to manage our multiple sources. Git thinks like a set of snapshort of a miniature filmsystem instead of our traditional stored systerm that take the information as a list of file-based changes. So everytime we use git to manage our information please don't forgot to store the snapshorts away.
 
-1 Four component of git workfolw
+1 Four components of git workfolw
 --------------------------------
 
 ![sample post]({{site.baseurl}}/images/git.png)
