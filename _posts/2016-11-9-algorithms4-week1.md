@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Algorithm 4th chapter 1 
+title: Algorithm 4th chapter 1 1.5 Case study: Union-Find 
 --- 
 
 ### **Two Classic Algorithm**
