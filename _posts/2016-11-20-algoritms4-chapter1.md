@@ -16,6 +16,7 @@ This chapter will cover these five main topics:
 
 ### 1.4 Analysis of Algorithms
 
+### 1.5 Case Study: Union Find
 
 1.1 Basic Programming Model
 ---------------------------
