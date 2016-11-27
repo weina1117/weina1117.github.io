@@ -17,7 +17,7 @@ title: CSAPP Chapter 1
 1.2 Programs Are Translated by Other Programs into Different Forms
 ------------------------------------------------------------------
 
-![sample post]({{site.baseurl}}/images/compilation-system.png)
+![sample post]({{site.baseurl}}/images/csappchp1/compilation-system.png)
 
 Four phase:
 * Preprocessor
@@ -46,7 +46,7 @@ Important to understand how compilation system work for the programmers.
 
 ##### 1.4.1 Hardware Organization of a System
 
-![sample post]({{site.baseurl}}/images/1.4.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.4.png)
 
 * Buses
   A collection of electrical conduits. It running throughout the system 
@@ -67,16 +67,16 @@ Important to understand how compilation system work for the programmers.
 ##### 1.4.2 Running the hello Program
 
 * Read the hello command from keyboard: 
-![sample post]({{site.baseurl}}/images/1.5.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.5.png)
 
 * Shell get the command from the keyboard
 
 * Code and data load to main memory from disk that process exacuted by shell
-![sample post]({{site.baseurl}}/images/1.6.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.6.png)
 
 * The output string will be write to the display from main memory,
   CPU will exacute this process.
-![sample post]({{site.baseurl}}/images/1.7.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.7.png)
 
 1.5 Cacher Matter
 -----------------
@@ -86,26 +86,26 @@ looding program: information copied from disk to main memory
  runing program: information copied from main memory into the processor.
 
 To deal with the processor-memory gap:
-![sample post]({{site.baseurl}}/images/1.8.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.8.png)
 
 1.6 Storage Devices Form a Hierarchy
 ------------------------------------
 
 Here we can hit the poit to impove performance.
-![sample post]({{site.baseurl}}/images/1.9.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.9.png)
 
 1.7 The Operating System Manages the Hardware
 ---------------------------------------------
 
 How does operating system looks like:
-![sample post]({{site.baseurl}}/images/1.10.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.10.png)
 
-![sample post]({{site.baseurl}}/images/1.11.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.11.png)
 
 ##### 1.7.1 Process
 
 It's an abstraction of operating system running program.
-![sample post]({{site.baseurl}}/images/1.12.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.12.png)
 
 (need to go over P53 again)
 
@@ -115,7 +115,7 @@ Multiple execution units within one process called threads.
 Each thread is running in context switching.
 They sharing the same code and globale data.(easier than process)
 
-![sample post]({{site.baseurl}}/images/1.13.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.13.png)
 
 ##### 1.7.3 Virtual Memory
 
@@ -147,8 +147,8 @@ The network can be viewed as just another I/O device. The system can read
 data sent from other machines and copy these data to its main memory over
 a network.
 
-![sample post]({{site.baseurl}}/images/1.14.png)
-![sample post]({{site.baseurl}}/images/1.15.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.14.png)
+![sample post]({{site.baseurl}}/images/csappchp1/1.15.png)
 
 1.9 Important Themes
 --------------------
