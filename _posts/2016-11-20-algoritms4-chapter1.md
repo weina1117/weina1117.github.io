@@ -71,7 +71,7 @@ Java basic structure -> Primitive Data type
 
 * Loops: A loops statement, while loop can be express compactly with for notation
 
-```javascript
+```java
 
 for (<initialize>; <boolean expression>;<increment>)
 {
@@ -79,7 +79,7 @@ for (<initialize>; <boolean expression>;<increment>)
 }
 ```
 
-``` javascript
+``` java
 
 <initialize>;
 while(<boolean expression>)
@@ -118,7 +118,7 @@ Simply to remember is:
 
 [Implementation (code fragment)](\[Pearson\]\ -\ Algorithms,\ 4th\ ed.\ -\ \[Sedgewick,\ Wayne\].pdf)
 
-```javascript
+```java
 
 // task1: find the maximum of the array values
 double max = a[0];
@@ -165,7 +165,7 @@ for(i = 0; i < N; i++)
 arguments to computes a return value of some data type or a side effect caused by the arguments.
 * Typical implementations of static method:
 
-```javascript
+```java
 
 // task1: abslute value of an int value
 public static int abs(int x)
@@ -258,7 +258,7 @@ public static double H(int N)
 
 ##### BinarySearch
 
-```javascript
+```java
 
 import java.util.Arrays;
 public class BinarySearch
@@ -289,8 +289,10 @@ public class BinarySearch
 		}
 	}
 }
+```
 
-% java BinarySearch tinyW.txt < tinyT.txt
+```sh
+$ java BinarySearch tinyW.txt < tinyT.txt
 50
 99
 13
