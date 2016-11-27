@@ -165,7 +165,7 @@ for(i = 0; i < N; i++)
 arguments to computes a return value of some data type or a side effect caused by the arguments.
 * Typical implementations of static method:
 
-```java
+{% hightlight java %}
 
 // task1: abslute value of an int value
 public static int abs(int x)
@@ -214,7 +214,7 @@ public static double H(int N)
 	return sum;
 }
 
-```
+{% endhighlight %}
 * Properties of Method worth nothing as follow: *
 * Arguments are passed by value.
 
