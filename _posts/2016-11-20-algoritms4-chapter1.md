@@ -165,7 +165,7 @@ for(i = 0; i < N; i++)
 arguments to computes a return value of some data type or a side effect caused by the arguments.
 * Typical implementations of static method:
 
-{% hightlight java %}
+{% highlight java %}
 
 // task1: abslute value of an int value
 public static int abs(int x)
