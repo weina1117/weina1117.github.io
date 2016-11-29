@@ -79,7 +79,7 @@ for (<initialize>; <boolean expression>;<increment>)
 }
 {% endhighlight %}
 
-``` java
+{% highlight java %}
 
 <initialize>;
 while(<boolean expression>)
