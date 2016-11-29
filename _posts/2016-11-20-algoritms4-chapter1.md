@@ -21,17 +21,17 @@ This chapter will cover these five main topics:
 1.1 Basic Programming Model
 ---------------------------
 
-```sequence
+{% highlight sequence %}
 
 Java Program -> Library of Static Methods: 
              -> Data-type Definition:
 
-```
+{% endhighlight %}
 
 A java program(class) is either a library of static methods(functions) or 
 a data type definition.
 
-```sequence
+{% highlight sequence %}
 Java basic structure -> Primitive Data type
 					 -> Statements
 					 -> Arrays
@@ -40,7 +40,7 @@ Java basic structure -> Primitive Data type
 					 --> Static Method
 					 --> Data Abstraction
 					 --> Standard I/O
-```
+{% endhighlight %}
 
 ##### Primitive Data type
 
@@ -71,13 +71,13 @@ Java basic structure -> Primitive Data type
 
 * Loops: A loops statement, while loop can be express compactly with for notation
 
-```java
+{% highlight java %}
 
 for (<initialize>; <boolean expression>;<increment>)
 {
 	<block statments>
 }
-```
+{% endhighlight %}
 
 ``` java
 
@@ -87,7 +87,7 @@ while(<boolean expression>)
 	<block statments>
 	<increment>;
 }
-```
+{% endhighlight %}
 
 
 * Call and Return: Calls, and returns, relate to static methods.
@@ -118,7 +118,7 @@ Simply to remember is:
 
 [Implementation (code fragment)](\[Pearson\]\ -\ Algorithms,\ 4th\ ed.\ -\ \[Sedgewick,\ Wayne\].pdf)
 
-```java
+{% highlight java %}
 
 // task1: find the maximum of the array values
 double max = a[0];
@@ -156,7 +156,7 @@ for(i = 0; i < N; i++)
 		for(int k = 0; k < N; k++)
 			c[i][j] += a[i][k] * b[k][j];
 	}
-```
+{% endhighlight %}
 
 ##### Static Methods
 
@@ -181,7 +181,7 @@ public static double abs(double x)
 	else         return x;
 }
 
-// task3: primality test(Can not understand why i*i < N)
+// task3: primality test(Can not understand why i\*i < N)
 public static boolean isPrime(int x)
 {
 	if (N < 2) return false;
@@ -203,7 +203,7 @@ public static double sqrt(double c);
 
 // task5: hypotenuse of a right triangle
 public static doublr hypotenuse(double a, double b);
-{return Math.sqrt(a*a + b*b)}
+{return Math.sqrt(a\*a + b\*b)}
 
 // task6: harmonic number
 public static double H(int N)
@@ -258,7 +258,7 @@ public static double H(int N)
 
 ##### BinarySearch
 
-```java
+{% highlight java %}
 
 import java.util.Arrays;
 public class BinarySearch
@@ -289,15 +289,15 @@ public class BinarySearch
 		}
 	}
 }
-```
+{% endhighlight %}
 
-```sh
+{% highlight sh %}
 $ java BinarySearch tinyW.txt < tinyT.txt
 50
 99
 13
 
-```
+{% endhighlight %}
 // 1. tinyW.txt is white list, sorted it at first;
    2. redirct input, take white list as an input other than pinput by user;
    3. testing tinyT.txt records line by line, if the records is not on the 
