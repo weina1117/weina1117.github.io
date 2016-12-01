@@ -10,7 +10,7 @@ This chapter will cover these five main topics:
 
 - [1.1 Basic Programming Model](#11-basic-programming-model)
 - [1.2 Data Abstraction](#12-data-abstraction)
-- [1.3 Bags, Queues and Stacks](#13-bags,-queues-and-stacks)
+- [1.3 Bags, Queues and Stacks](#13-bags-queues-and-stacks)
 - [1.4 Analysis of Algorithms](#14-analysis-of-algorithms)
 - [1.5 Case Study: Union Find](#15-case-study-union-find)
 
@@ -28,6 +28,7 @@ A java program(class) is either a library of static methods(functions) or
 a data type definition.
 
 {% highlight sequence %}
+
 Java basic structure -> Primitive Data type
 					 -> Statements
 					 -> Arrays
@@ -36,6 +37,7 @@ Java basic structure -> Primitive Data type
 					 --> Static Method
 					 --> Data Abstraction
 					 --> Standard I/O
+
 {% endhighlight %}
 
 - [Primitive Data type](#primitive-data-type)
@@ -50,7 +52,7 @@ Java basic structure -> Primitive Data type
 - [Statement](#statement)
 - [Array](#array)
 - [Static Methods](#static-methods)
-- [Standard I/O](#standard-i/o)
+- [Standard I/O](#standard-io)
 - [BinarySearch](#binarysearch)
 
 |  type   |  set of values  |  operators     |      expression |    value |
@@ -81,7 +83,7 @@ Java basic structure -> Primitive Data type
 ##### Statement
 
 * Declaration: A declaration statement, java compiler checks for consistency.
-              Since java is a * strongly typed * language.
+              Since java is a **strongly typed** language.
 
 * Assignment: An assignment statement.
 
@@ -107,14 +109,13 @@ while(<boolean expression>)
 }
 {% endhighlight %}
 
-
 * Call and Return: Calls, and returns, relate to static methods.
 
 Simply to remember is:
 
 1. Initializing declaration
 
-2. ![Implicit Assignments]()
+2. Implicit Assignments
 
 2. Implicit Assignments
 
@@ -128,7 +129,7 @@ Simply to remember is:
 
 * stores a sequence of same type values, once we want to use one value of them, 
   number and index them
-* To create a new array through the keyword * new * at the run time.
+* To create a new array through the keyword **new** at the run time.
 * Don't omit anyone step!! 
   Following: declaring, creating and initializing.
 
@@ -180,6 +181,7 @@ for(i = 0; i < N; i++)
 		for(int k = 0; k < N; k++)
 			c[i][j] += a[i][k] * b[k][j];
 	}
+
 {% endhighlight %}
 
 ##### Static Methods
@@ -239,7 +241,8 @@ public static double H(int N)
 }
 
 {% endhighlight %}
-* Properties of Method worth nothing as follow: *
+
+* **Properties of Method worth nothing as follow:**
 * Arguments are passed by value.
 
 * Method names can be overloaded.
@@ -260,13 +263,13 @@ public static double H(int N)
 * Unit testing: A best practice in java programming is to include main() in every 
   library of static methods to test the method in all libraries.
 
-* goal of APIs: Seperate the client from the implementation.
+* Goal of APIs: Seperate the client from the implementation.
 
 * Strings:
 
 ##### Standard I/O
 
-* ** Formatted output: ** printf() takes two arguments. The first argument is a format string. 
+* **Formatted output:** printf() takes two arguments. The first argument is a format string. 
   Such like ("%14d",x) begin with % and ends with one-letter convertion code.
 
 * Between % and the conversion code is an integer value that specifies the field width 
@@ -275,7 +278,7 @@ public static double H(int N)
   digits to put after the decimal point (thr precision) for a double value or the number
   of characters to take from the beginning of the string for a string value. 
 
-* ** Redirection and Piping **
+* **Redirection and Piping**
   We can redirect the standard output or input to a file.
 
 * data abstraction: known as object-oriented programming.
@@ -313,19 +316,22 @@ public class BinarySearch
 		}
 	}
 }
+
 {% endhighlight %}
 
 {% highlight sh %}
+
 $ java BinarySearch tinyW.txt < tinyT.txt
 50
 99
 13
 
-{% endhighlight %}
 // 1. tinyW.txt is white list, sorted it at first;
    2. redirct input, take white list as an input other than pinput by user;
    3. testing tinyT.txt records line by line, if the records is not on the 
       whilt list, then print this records.
+
+{% endhighlight %}
 
 1.2 Data Abstraction
 --------------------
@@ -379,7 +385,8 @@ How to create an array (two steps):
 * Create each object in the array, using a standard constructor for each.
   "Must to initiate each object"
 
-```java
+{% highlight java %}
+
 Counter[] rolls = new Counter[SIDES + 1];
 for(int i=1; i < SIDES; i++)
 	rolls[i] = new Counter (i + "'s");
@@ -387,7 +394,8 @@ for(int i=1; i < SIDES; i++)
 int[] a = new int[N];
 for(int i=1; i < N; i++)
 	a[i] = i* N;
-```
+
+{% endhighlight %}
 
 ##### Example of Abstract Data Type
 
@@ -472,7 +480,8 @@ Defect. Stack overflows when N exceeds capacity.
 * Value: push onto value stack.
 * Operator: push onto operator stack.
 * Left parenthesis: ignore.
-* Right parenthesis: pop operator and two values; push the result of applying that operator to those values ontothe overand stack.
+* Right parenthesis: pop operator and two values;
+  Push the result of applying that operator to those values ontothe overand stack.
 
 
 1.4 Analysis of Algorithms
@@ -484,16 +493,16 @@ Defect. Stack overflows when N exceeds capacity.
 1.5 Case Study: Union Find
 --------------------------
 
-### **Two Classic Algorithm**
+### Two Classic Algorithm
 
-#### **Quick-find**
+#### Quick-find
 
-##### **Data Structure**
+##### Data Structure
 
 * Integer Array id[] of size N
 * Interpretation: p and q are connected if and only if they have the same id.
 
-##### This is so called eager algorithm,for solving kind activity problem.
+**This is so called eager algorithm,for solving kind activity problem.**
 
 **Find** Check if p and q have the same id.
 **Union** To merge components containing p and q,change all entries whose id equals id[p] to id[q].
@@ -505,9 +514,9 @@ Defect. Stack overflows when N exceeds capacity.
 |quick-find |      N     |   N   |   1  |
 
 
-#### **Quick-union**
+#### Quick-union
 
-##### **Data Structure**
+##### Data Structure
 
 * Integer Array id[] of size N
 * Interpretation: id[i] is parent of i.
@@ -523,21 +532,21 @@ Defect. Stack overflows when N exceeds capacity.
 |quick-find |      N     |   N   |   1  |
 |quick-union|      N     |tree height|tree height| <--worst case
 
-#### **Quick-find defect**
+#### Quick-find defect
 
 * Union too expensive(N array accesses).
 * Trees are flat, but too expensive to keep them flat.
 
-#### **Quick-union defect**
+#### Quick-union defect
 
 * Trees can get tall.
 * Find too expensive(could be N array accesses).
 
-#### **Improvements** Weighted quick-union
+#### Improvements Weighted quick-union
 
 ##### Weighted quick-union
 
-##### **Data Structure**
+##### Data Structure
 
  Same as quick-union, but maintain extra array sz[i] to count number of objects in the tree rooted at i.
 
@@ -555,7 +564,7 @@ Defect. Stack overflows when N exceeds capacity.
 |quick-union|      N     |tree height|tree height|
 |weighted QU|      N     |  lgN  | lgN  |
 
-### **Analysis of Algorithms**
+### Analysis of Algorithms
 
  Here is the issues from the poin of view of different types of characters:
 
@@ -573,4 +582,5 @@ Defect. Stack overflows when N exceeds capacity.
 * Understand theoretical basis.
 * Primary practical reason: avoid performance bugs.
 
-##### A scientific method applied to analysis of algorithms has it's Principles, that are experiments must be reproducible and hypotheses must be falsifiable.
+**A scientific method applied to analysis of algorithms has it's Principles, that are experiments must be reproducible and hypotheses must be falsifiable.**
+
