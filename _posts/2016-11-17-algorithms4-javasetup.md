@@ -39,7 +39,7 @@ $ wget http://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/BinarySearch.ja
 * vim to the file, here should be noticed that you should change something in
   here:
 
-you will see `package edu.princeton.cs.algs4` that shoul be change to
+you will see `package edu.princeton.cs.algs4` that should be change to
 `import edu.princeton.cs.algs4.*` Why we chage the `package` to `import`?
 This is manually input to show the dependency so that the computer could find
 the comipling class file through file name
@@ -65,7 +65,7 @@ To compile the program, we can use the following command:
 $ javac BinarySearch.java
 ```
 
-After the set up steps, you will compiling successful.
+After the set up steps, you will compile successful.
 
 2 Exacute the program
 ---------------------
@@ -76,9 +76,12 @@ After the set up steps, you will compiling successful.
 $ java BinarySearch < tinyW.txt
 ```
 
+explanation of Classpath:
+-------------------------
+
 Classpath is the connection between the java runtime and the filesystem.
-It defines where the interpreter looks forclass files to load.
-The command "echo $Classpath" means that to find the compiled files through the
+It defines where the interpreter looks for class files to load.
+The command "echo $CLASSPATH" means that to find the compiled files through the
 name. So, here we need to add the path manually that's our first import.
 
 **Note**: In the path here has".", before the dot that is the package, after
