@@ -35,8 +35,8 @@ The different mathematical properties of integer versus floating-point arithmeti
 2.1 Information Storage
 -----------------------
 
-8 bits or bytes, as the smallest addressable unit of memory. 
-Virtual address space is a very large arrary of bytes.
+Rather than access individuel bits in a memory, many computer use blocks of eight bits,
+or bytes, as the smallest addressable memory.
 
 ###### New to C? 
 
@@ -45,19 +45,31 @@ Virtual address space is a very large arrary of bytes.
 
 ###### 2.1.1 Hexadecimal Notation
 
-A common task is to manually convert between decimal, binary, and hexadecimal
+A single byte consists of 8 bits. In binary notation, we use hexadecimal to 
+express a byte in the computer.
+
+To convert a binary number to a hex number:
+  Splite the number into 4-bit groups and convert the groups one by one.
+
 
 ###### 2.1.2 Data Sizes
 
+Word Size: Every computer has a word size, which indicates normal size of data and addresses.
+exp: 32-bit word size =maximun 4GB virtual address
 The virtual addresses range: from 0 to 2 \*\* [w]-1
 
 ###### 2.1.3 Addressing and Byte Ordering
 
-Two conventions:
-* what the address of the object will be
-* how will order the bytes in memory
+For a object that span multiple bytes, we always focus these problems: 
+What will be the address of the object? 
+How will we order the bytes in the computer memory? 
 
-Note: be careful with `little endian` and `big endian`
+The first problem: We always stored the object in a contiguous sequence.
+For example, for a integer, the start of its memory is 0x01, then it may be span to 0x02, 0x03, 0x04…. 
+The Second problem: Consider a w-bit question has a bit representation 
+[x<sub>w−1</sub>x<sub>w−2</sub>...w<sub>1][xw-1xw-2...w1], in which xw-1 is the most significant bit. 
+The former convention, where the least significant bit comes first is called little endian,
+while now the most significant bit comes first is called big endian.
 
 ###### 2.1.4 Representing Strings
 
@@ -86,6 +98,10 @@ Note: be careful with `little endian` and `big endian`
 2.2 Integer Representations
 ---------------------------
 
+Two’s-Complement Encodings
+The most com-mon computer representation of signed numbers is known as two’s-complement form. 
+This is defined by interpreting the most significant bit of the word to have negative weight. 
+We express this interpretation as a function B2Tw(for “binary to two’s-complement” length w ):
 
 
 
