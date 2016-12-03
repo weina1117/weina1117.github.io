@@ -36,7 +36,7 @@ through `wget` command add the link address from the book(algs4)
 $ wget http://algs4.cs.princeton.edu/code/edu/princeton/cs/algs4/BinarySearch.java
 ```
 
-* vim to the file, here should be noticed that you should change something in
+* vim to the file, here should be noticed that you should be changed something in
   here:
 
 you will see `package edu.princeton.cs.algs4` that should be change to
