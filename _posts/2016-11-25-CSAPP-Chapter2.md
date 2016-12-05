@@ -73,19 +73,52 @@ while now the most significant bit comes first is called big endian.
 
 ###### 2.1.4 Representing Strings
 
-
+A string in C is encoded by an arrary of characters, which ended with the null(value is 0). 
+Each characters is represented by some standard encoding, with the most common standard encoding
+is ASCII code. Since we will get the same result by using ASCII code, independent of the byte
+ordering and word size conventions. That's why we say text data are more platform independent than
+binary data.
 
 ###### 2.1.5 Representing Code
 
-
+Difference machine types use different and incompatible instructions and encodings.
+Binary code is seldom portable across different combinations of machine and operating system.
 
 ###### 2.1.6 Introduction to Boolean Algebra
 
+Boolean Algebra
 
+~                &    0   1              |      0    1            ^     0   1
+:----          :------------           :--------------          :-------------
+0  1             0    0   0              0      0    1            0     0   1
+1  0             1    0   1              1      1    1            1     1   0
 
 ###### 2.1.7 Bit-level Operations in C
 
+C supports bitwise Boolean operations. The best way to show the bit-level result is to convert 
+hexadecimal to binary to do the operations and then convert back to hexadecimal.
 
+Considering this example:
+As an application of the property that a ^ a = 0 for any bit vector, we have the following program:
+
+```C
+void inplace_swap(int *x, int *y) {
+	*y = *x ^ *y; /*Step 1*/
+	*x = *x ^ *y; /*Step 2*/
+	*y = *x ^ *y; /*Step 3*/
+}
+``` 
+
+Step                    \*x            \*y
+:------------------------------------------
+Initially                a               b
+Step 1                   a              a^b
+Step 2          a^(a^b)=(a^a)^b=b       a^b
+Step 3                   b          b^(a^b)=(b^b)^a=a
+
+Here we do not need a third location to temporarily store one value while we are moving the other.
+This procedure is to swap the values stored at the locations denoted by pointer variables x and y.
+?(Is this mostly useful ?)
 
 ###### 2.1.8 Logical Operations in C
 
