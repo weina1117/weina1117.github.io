@@ -64,7 +64,7 @@ must compile operations for this data type by generating　code that performs se
 
 Word Size: Every computer has a word size, which indicates normal size of data and addresses.
 exp: 32-bit word size =maximum 4GB virtual address
-The virtual addresses range: from 0 to 2^w -1
+The virtual addresses range: from 0 to $2^w -1$
 
 ###### 2.1.3 Addressing and Byte Ordering
 
@@ -156,7 +156,7 @@ Assume we have an integer data type of w bits. We write a bit vector, or as
 $[x\_{w-1},x\_{w-2},...,x_0]$ to denote its individual bits. When we refer to 
 such a unsigned number, the value of the number is 
 
-$B2U\_w (\vec{x}) = sum\_{i=0}^{w-1} {x_i \*2^i}$ 
+$B2U\_w (\vec{x}) = \sum\_{i=0} ^{w-1} {x_i \*2^i}$ 
 
 Why we can use binary represent decimal numbers?
 The unsigned binary representation has the important property that every number between 0 and $2^w −1$
@@ -229,10 +229,9 @@ Truncating a number can alter its value, which is another type of overflow!
 
 Unsigned arithmetic can be viewed as a form of modular arithmetic. 
 
-\begin{eqnarray\*}
-x+^{\upsilon}\_{\omega}y & = & \ x+y , x+y<2^{\omega} Normal\\
-& = & \ x+y-2^{\omega}, 2^{\omega}\le(x+y)\le2^(\{omega+1}) Overlow
-\end{eqnarray\*}
+$x+^u \_w y = x+y , x+y<2^w$;
+
+$x+^u \_w y = x+y-2^w, 2^w \le(x+y) \le 2^{w+1}$ 
 
 Modular addition forms Abelian group, which has the identity element 0. Two’s-Complement Arithmetic 
 as we shown above, the Two’s-Complement Arithmetic may cause positive overflow or negative overflow, 
