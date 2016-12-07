@@ -64,7 +64,7 @@ must compile operations for this data type by generating　code that performs se
 
 Word Size: Every computer has a word size, which indicates normal size of data and addresses.
 exp: 32-bit word size =maximum 4GB virtual address
-The virtual addresses range: from 0 to 2 \*\* [w]-1
+The virtual addresses range: from 0 to 2^w -1
 
 ###### 2.1.3 Addressing and Byte Ordering
 
@@ -77,7 +77,7 @@ How will we order the bytes in the computer memory?
 The first problem: We always stored the object in a contiguous sequence.
 For example, for a integer, the start of its memory is 0x01, then it may be span to 0x02, 0x03, 0x04…. 
 The Second problem: Consider a w-bit question has a bit representation 
-[x\_(w−1),x\_(w−2),...x_1,x_0], in which x\_(w-1) is the most significant bit. 
+$x\_(w−1),x\_(w−2),...x_1,x_0$, in which $x\_(w-1)$ is the most significant bit. 
 The former convention, where the least significant bit comes first is called little endian,
 while now the most significant bit comes first is called big endian.
 
@@ -99,7 +99,7 @@ Binary code is seldom portable across different combinations of machine and oper
 Boolean Algebra
 
 ~                &    0   1              |      0    1            ^     0   1
-:---:          :-----------:           :--------------:          :------------:
+:---:           :----------:            :-------------:          :------------:
 0  1             0    0   0              0      0    1            0     0   1
 1  0             1    0   1              1      1    1            1     1   0
 
@@ -120,7 +120,7 @@ void inplace_swap(int *x, int *y) {
 ``` 
 
 Step                    \*x            \*y
-:------------------------------------------
+:-----------------------------------------:
 Initially                a               b
 Step 1                   a              a^b
 Step 2          a^(a^b)=(a^a)^b=b       a^b
@@ -135,7 +135,7 @@ This procedure is to swap the values stored at the locations denoted by pointer 
 Logical Operators(||,&&,!) We should convert the expressions to be true or false before we involve
 the logical operators, and then to calculate the logical operation.
 
-Distinction between the logical operators versus their bit=level counterparts is that the logical
+Distinction between the logical operators versus their bit = level counterparts is that the logical
 operators do no evaluate their second arguent if the result of the expression can be determined
 by evaluating the first argument.
 
@@ -153,17 +153,17 @@ by evaluating the first argument.
 ##### 2.2.2 Unsigned Encodings
 
 Assume we have an integer data type of w bits. We write a bit vector, or as 
-[xw−1xw−2..x1][x_{w-1}x_{w-2}..x_1] to denote its individual bits. When we refer to 
+$[x\_{w-1},x\_{w-2},...,x_0]$ to denote its individual bits. When we refer to 
 such a unsigned number, the value of the number is 
 
-$B2U\_{\omega}(\vec{x})=sum\_{i=0}^{w-1}{x_i\*2^i}$ 
+$B2U\_w (\vec{x}) = sum\_{i=0}^{w-1} {x_i \*2^i}$ 
 
 Why we can use binary represent decimal numbers?
-The unsigned binary representation has the important property that every number between 0 and 2^w− 1
+The unsigned binary representation has the important property that every number between 0 and $2^w −1$
 has a unique encoding as a w -bit value. For example, there is only one representation of decimal
 value 11 as an unsigned, 4-bit number, namely [1011]. This property is captured in mathematical terms
 by stating that **function B2Uw is a bijection** —it associates a unique value to each bit vector of length
-w ; conversely, each integer between 0 and 2^w− 1 has a unique binary representation as a bit vector of
+w ; conversely, each integer between 0 and $2^w −1$ has a unique binary representation as a bit vector of
 length w.
 
 ##### 2.2.3 Two's-Complement Encodings
@@ -251,7 +251,7 @@ Multiply or divide by powers of 2: We can use left or right shift to accomplish 
 2.4 Floating Point
 ------------------
 
-Floating Point representation encodes rational numbers of the form V=x∗2yV =x\*2^y, which is useful
+Floating Point representation encodes rational numbers of the form $V =x\*2^y$, which is useful
 for performing computations involving very largr numbers. 
 
 1985-IEEE754 Standard, under the sponsorship with the design of 8087.
