@@ -39,8 +39,9 @@ resulting program performance.
 How does gcc command turn the source code into exacutable code?
 * first, the C preprocessor expands the source code and macros
 * second, the compiler generates assembly code files, names p1.s and p2.s
-* next, the compiler converts the assembly coded into binary files, names p1.o and p2.o
-        this is just object-code files that are not yet filled in the addresses of glabla values
+* next, the compiler converts the assembly coded into binary files that we cann't viewed directly,
+        names p1.o and p2.o this is just object-code files that are not yet filled in the 
+        addresses of glabla values
 * finally, merge these above two files with code implementing library functions and generates the
            final fle p that is exacutable
 
@@ -55,15 +56,43 @@ Two important abstraction:
 * Virtual addresses
   Make the memory model looks like a very large byte array
 
+A single machine instruction performs only a very elementary operation. The compiler must deal with
+the sequences of these instructions to implement program constructs such as arithmetic expression 
+evaluation, loops, or procedure calls and returns.
 
+##### Notes on Formatting
+
+All of the lines beginning with '.' are directives to guide the assembler and linker, we can 
+ignore these.
 
 3.3 Data Formats
 ----------------
 
-
+Term "word": 16-bit data type 
+Term "double words": 32-bit data quantities
+Term "quad words": 64-bit quantities
 
 3.4 Accessing Information
 -------------------------
+
+An x86-64 CPU contains a set of 16 general-purpose registers storing 64-bit values. These registers are
+used to store integer data as well as pointers, starting with %r, but following different naming conventions.
+
+##### Operand Specifiers
+
+Most instructions have one or more operands, which shows the source value caused by the operand or tell us
+the destination location of the result.
+
+Three main operands:
+* immediate, constant values.
+* register, denote the contents of a register.
+* memory reference (effective address), in which we access the memory location according to a computed address.
+
+##### Data Movement Instructions
+
+Mostly used movement is copy data from one location to another.Operand notation makes this process much easier.
+
+
 
 
 
