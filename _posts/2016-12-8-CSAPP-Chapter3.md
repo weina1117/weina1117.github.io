@@ -91,19 +91,74 @@ Three main operands:
 ##### Data Movement Instructions
 
 Mostly used movement is copy data from one location to another.Operand notation makes this process much easier.
+There are two instructions to copying a value from one memory to another:
+* To load the source value into a register
+* To write this register vaule to the destination.
 
-
-
-
+**pushing and popping stack data**
+The instruction `pushq %rbp` is equivalent to this two steps: decrement stack pointer, store `%rbp` on stack
+The instruction `popq %rax` is equivalent to this two steps: read `%rax` from stack, increment stack pointer
 
 3.5 Arithmetic and Logical Operations
 --------------------------------------
 
+Each instruction opeates on the four different sizes of data, which are bytes, words, double words and quad words.
+The operations are divided into four groups: load effective address, unary, binary and shifts.
 
+* Load effective address operation
+  This instruction `leaq` is actually a variant of instruction `movq`. It's form to read from memory to a register,
+but it doesn't reference memory at all. It just copies the effective address to the destinated location.
+ 
+* Unary operation
+  This one operand is used as both source and destination operands.  
+
+* Binary operation
+  The sencond operand is used as both source and destination operands.
+
+* Shift operations
+  First give the amount shift and second give the value to shift. Either arithmetic or logical right shift is fine. 
+
+##### Special Arithmetic Operations
 
 3.6 Control
 ----------
 
+Two basic mechanisms for implementing conditional behavior: it test data value and then alter either control flow 
+or data flow based on the results of the tests.
+
+##### Condition Codes
+
+CPU keeps the other register except the integer registers is the condition code register. It stores the most 
+arithmetic or logical operation atrributes. It can be tested to perform conditional braches. Such as:
+CF: Carry flag. Overflow fro unsigned operations
+ZF: Zero flag. Zero
+SF: Sign flag. Negavtive value.
+OF: Overflow flag. Two's-complement overflow, either negative or positive.
+
+##### Accessing the Condition Codes
+
+Conditon cades can not reading directly, there are there three ways to using them:
+* Depending on some combination of the condition codes, set a single byte to 0 and 1.
+* Conditionally jump to some other part of the program.
+* Conditionally transfer data.
+
+##### Jump Instructions
+
+
+
+##### Implementing Conditional Branches with Conditional Control
+
+
+
+##### Implementing Conditional Branches with Conditional Moves
+
+
+
+##### Loops
+
+
+
+##### Swith statements
 
 
 3.7 Procedure

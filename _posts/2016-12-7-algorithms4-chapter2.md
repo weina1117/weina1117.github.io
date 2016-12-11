@@ -84,7 +84,7 @@ Two signature properties:
 * Data movement is minimal
 
 **Proposition A.**
-If the length of an array is N, we uses $N^2/2$ compares and N exchanges to.
+If the length of an array is N, we uses $N^2/2$ compares and $N$ exchanges to.
 
 {% highlight java %}
 
@@ -134,7 +134,7 @@ public class Insertion
 **Proposition B.**
 On the average, insertion sort uses $N^2/4$ compares and $N^2/4$ exchanges to sort a randomly
 ordered array of length N with distinct keys. The worst case is $N^2/2$ compares and $N^2/2$ 
-exchanges and the best case is N-1 compares and 0 exchanges.
+exchanges and the best case is $N-1$ compares and $0$ exchanges.
 
 Typical examples of partially sorted arrays are the following:
 * An array where each entry is not far from its final position
@@ -198,7 +198,6 @@ public class SortCompare
 
 ##### Shell Sort
 
-
 Shellsort is a simple extension of insertion sort that in order to gains the speed by 
 allowing exchanges of array entries that are far apart, to produce partially sorted arrays 
 that can be efficiently sorted, eventually by insertion sort.
@@ -231,7 +230,7 @@ public class Shell
 {% endhighlight %}
 
 **Property E.**
-The number of compares used by shellsort with the increments 1, 4,13, 40, 121, 364, . . . is 
+The number of compares used by shellsort with the increments $1, 4,13, 40, 121, 364, . . .$ is 
 bounded by a small multiple of N times the number of increments used.
 
 2.2 Mergesort
