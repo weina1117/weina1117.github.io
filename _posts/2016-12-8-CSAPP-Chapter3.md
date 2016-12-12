@@ -156,7 +156,7 @@ There are several different encoding for jumps, but most commonly used is PC rel
 The most general way to show the conditional statements in assembly code is to use
 combinations of conditional and unconditional jumps.
 
-Not all conditional expression can be compiled using conditional moves. If one of these two expresstion (`then-expr` 
+Not all conditional expressions can be compiled using conditional moves. If one of those two expresstions (`then-expr` 
 and `lese-expr`) could cause the error or a side effect, this could lead to invalid behavior.
 
 ##### Loops
