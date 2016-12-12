@@ -157,7 +157,7 @@ The most general way to show the conditional statements in assembly code is to u
 combinations of conditional and unconditional jumps.
 
 Not all conditional expressions can be compiled using conditional moves. If one of those two expresstions (`then-expr` 
-and `lese-expr`) could cause the error or a side effect, this could lead to invalid behavior.
+and `else-expr`) could cause the error or a side effect, this could lead to invalid behavior.
 
 ##### Loops
 
