@@ -8,7 +8,7 @@ What is a Java Virtual Machine?
 -------------------------------
 
 A java virtual machine is the abstract specifications since we can not see this machine, it exist in the memory
-of the computor, but it is so called a virtual computer platform, which consist of either all software or a 
+of the computer, but it is so called a virtual computer platform, which consist of either all software or a 
 combination of hardware and software. Each java application runs inside a runtime instance of some concrete
 implementation of the abstract specification of the java virtual machine.
 
@@ -17,8 +17,8 @@ The Architecture of Java Virtual Machine
 
 The outside it will be looks like three layer:
 The top layer is a java virtual Machine, it talks with the second layer directly.
-The second layer is our computer system (like windows), it talks with the first and the third layer deirectly.
-THe third layer is our computer hardware system (like Intel), it talks with the computer system directly and 
+The second layer is our computer system (like windows), it talks with the first and the third layer directly.
+The third layer is our computer hardware system (like Intel), it talks with the computer system directly and 
 java virtual machine indirectly.
 
 The inside of a java virtual machine: what's the components and how does it works?
