@@ -123,8 +123,8 @@ but it doesn't reference memory at all. It just copies the effective address to 
 3.6 Control
 ----------
 
-Two basic mechanisms for implementing conditional behavior: it test data value and then alter either control flow 
-or data flow based on the results of the tests.
+Two basic mechanisms for implementing conditional behavior: it test data value (just test, not a real compute) and 
+then alter either control flow or data flow based on the results of the tests.
 
 ##### Condition Codes
 
@@ -144,22 +144,30 @@ Conditon cades can not reading directly, there are there three ways to using the
 
 ##### Jump Instructions
 
+A jump instruction swich the order to a new position of the program, it will be shown 
+the desitination position starting with a label.
 
+The `jmp` instruction jumps unconditionally. The others are conditional jumps.
+There are several different encoding for jumps, but most commonly used is PC relative. They encode the difference
+ between the target address and the following jump address. Some are use "absolute" address to encode. 
 
-##### Implementing Conditional Branches with Conditional Control
+##### Implementing Conditional Branches
 
+The most general way to show the conditional statements in assembly code is to use
+combinations of conditional and unconditional jumps.
 
-
-##### Implementing Conditional Branches with Conditional Moves
-
-
+Not all conditional expression can be compiled using conditional moves. If one of these two expresstion (`then-expr` 
+and `lese-expr`) could cause the error or a side effect, this could lead to invalid behavior.
 
 ##### Loops
 
-
+There is no loops in machine code, we use the combinations of conditional tests and
+jumps to instead the effect of loop statements.
 
 ##### Swith statements
 
+A `switch` statement provides a multiway branching capability based on the value of an integer index. The key point is to 
+see the use of a jump table to find a corresponding relationship.
 
 3.7 Procedure
 ------------
