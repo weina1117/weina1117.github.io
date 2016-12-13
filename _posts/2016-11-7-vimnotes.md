@@ -1,6 +1,6 @@
 ---
 layout: post
-title: My keypresses on daily basis
+title: Vim notes
 ---
 
 ![sample post]({{site.baseurl}}/images/vim-life.png)
