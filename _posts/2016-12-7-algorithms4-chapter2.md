@@ -75,6 +75,7 @@ a variation of one of them: shellsort
 ##### Selection Sort
 
 Steps:
+ 
 * First, find the smallest item in the array, and exchange it with the first entry.
 * Then, find the next smallest item and exchange it with the second entry.
 * Continue in this way until the entire array is sorted.
@@ -227,7 +228,7 @@ public class Shell
  	}
  	// See page 245 for less(), exch(), isSorted(), and main().
 }
-{% endhighlight %}
+{g endhighlight %}
 
 **Property E.**
 The number of compares used by shellsort with the increments $1, 4,13, 40, 121, 364, . . .$ is 
@@ -236,7 +237,35 @@ bounded by a small multiple of N times the number of increments used.
 2.2 Mergesort
 -------------
 
+The simple idea is: to sort an array, divide it into small groups, sort the small groups 
+(recursively) first, and then merge the results.
+
+Pros: to sort an array of N items in time proportional to N log N, no matter what the input
+Cons: it uses extra space proportional to N.
+
+![sample post]({{site.baseurl}}/images/algorithms4/mergesort-overview.png)
+
 ##### Abstract in-place merge
+
+The core idea is to make sure that the number in the pointer left side is the lower value elements in the two
+subsequences, respectively. We exchange the part of the array to reorder it. Easier to understand as follow:
+
+Here Figure a shows the two subsequences, and we start in-place merge from Figure b. 
+After Figure b, we can see the value in the left side of pointer `i` is the lower value elements in the two subsequences.
+Figure c, since $20,25 < 30$, pointer `j` keep right movement until find the value is greater than $30$. 
+
+![sample post]({{site.baseurl}}/images/algorithms4/a.jpg)
+
+After Figure c, we learned that all the value in $\[index, j)$ are less then the part of $\[i,index)$, in order to
+make sure the left side of pointer `i` is the lower value elements, we change this two part, the step length equals the numbers 
+of the $\[index,j)$, here is $2$. Then we get Figure e.
+![sample post]({{site.baseurl}}/images/algorithms4/e.png)
+
+Figure e, pointer `i` moves 2(we just mentioned above) to the right, that is $i += (j - index)$
+Figure f, repeat the process in Figure b.
+
+![sample post]({{site.baseurl}}/images/algorithms4/f.png)
+ 
 
 ##### Top-down mergesort
 
