@@ -1,6 +1,6 @@
 ---
 layout: post
-title: How to set up java programming environment
+title: Algorithms 4th \_ How to set up java programming environment
 ---
 
 This document instructs you on how to set up java programming environment for

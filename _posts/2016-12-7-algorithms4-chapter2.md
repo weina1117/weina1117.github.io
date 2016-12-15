@@ -75,6 +75,7 @@ a variation of one of them: shellsort
 ##### Selection Sort
 
 Steps:
+ 
 * First, find the smallest item in the array, and exchange it with the first entry.
 * Then, find the next smallest item and exchange it with the second entry.
 * Continue in this way until the entire array is sorted.
@@ -236,16 +237,233 @@ bounded by a small multiple of N times the number of increments used.
 2.2 Mergesort
 -------------
 
+The simple idea is: to sort an array, divide it into small groups, sort the small groups 
+(recursively) first, and then merge the results.
+
+Pros: to sort an array of N items in time proportional to N log N, no matter what the input
+Cons: it uses extra space proportional to N.
+
+![sample post]({{site.baseurl}}/images/algorithms4/mergesort-overview.png)
+
 ##### Abstract in-place merge
+
+The core idea is to make sure that the number in the pointer left side is the lower value elements in the two
+subsequences, respectively. We exchange the part of the array to reorder it. Easier to understand as follow:
+
+Here Figure a shows the two subsequences, and we start in-place merge from Figure b. 
+After Figure b, we can see the value in the left side of pointer `i` is the lower value elements in the two subsequences.
+Figure c, since $20,25 < 30$, pointer `j` keep right movement until find the value is greater than $30$. 
+
+![sample post]({{site.baseurl}}/images/algorithms4/a.jpg)
+
+After Figure c, we learned that all the value in $\[index, j)$ are less then the part of $\[i,index)$, in order to
+make sure the left side of pointer `i` is the lower value elements, we change this two part, the step length equals 
+the numbers of the $\[index,j)$, here is $2$. Then we get Figure e.
+![sample post]({{site.baseurl}}/images/algorithms4/e.png)
+
+Figure e, pointer `i` moves 2(we just mentioned above) to the right, that is $i += (j - index)$
+Figure f, repeat the process in Figure b.
+
+![sample post]({{site.baseurl}}/images/algorithms4/f.png)
+ 
+{% highlight java  %}
+// Abstract In-place Merge
+public static void merge(Comparable[] a, int lo, int mid, int hi)
+{ // Merge a[lo..mid] with a[mid+1..hi].
+	int i = lo, j = mid+1;
+
+	for (int k = lo; k <= hi; k++)           // Copy a[lo..hi] to aux[lo..hi].
+		aux[k] = a[k];
+	for (int k = lo; k <= hi; k++)           // Merge back to a[lo..hi].
+		if (i > mid) a[k] = aux[j++];
+		else if (j > hi ) a[k] = aux[i++];
+		else if (less(aux[j], aux[i])) a[k] = aux[j++];
+		else a[k] = aux[i++];
+}
+{% endhighlight %}
+
+For the second for loop, there are four conditions: 
+* if the left half exhausted, we take from the right
+* if the right half exhausted, we take from the left 
+* if the current key on right less than current key on left, we take from the right 
+* if the current key on right greater than or equal to current key on left, we take from the left.
 
 ##### Top-down mergesort
 
+This is a recursive mergesort implementation based on the abstract in-place merge. It is one of the 
+best-known examples of the divide-and-conquer utility fot the algorithm design.
+
+{% highlight java %}
+public class Merge
+{
+	private static Comparable[] aux;        // auxiliary array for merges
+ 	public static void sort(Comparable[] a)
+ 	{
+ 		aux = new Comparable[a.length];     // Allocate space just once.
+ 		sort(a, 0, a.length - 1);
+ 	}
+ 	private static void sort(Comparable[] a, int lo, int hi)
+ 	{ // Sort a[lo..hi].
+ 		if (hi <= lo) return;
+ 		int mid = lo + (hi - lo)/2;
+ 		sort(a, lo, mid);                   // Sort left half.
+ 		sort(a, mid+1, hi);                 // Sort right half.
+ 		merge(a, lo, mid, hi);              // Merge results (code on Abstract In-place Merge).
+ 	}
+}
+
+{% endhighlight %}
+
+To sort a subarray a[lo..hi], first, we divide it into two parts: a[lo..mid] and a[mid+1..hi], and 
+then to sort them independently (via recursive calls), finally, to merge the resulting ordered 
+subarrays and produce the result.
+
+**Proposition F**
+Top-down mergesort uses between $1/2 N lg N$  and $N lg N$ compares to sort any array of length $N$.
+
+**Proposition G** 
+Top-down mergesort uses at most $6N lg N$ array accesses to sort an array of length $N$. 
+Since $2N$ for the copy, $2N$ for the move back, and at most $2N$ for compares.
+
+Also the mergesort has its cons. It requires extra space proportional to $N$ for the auxiliary 
+array for merging. So we can carefully to consider that: if space is at a premium, can we have another
+method? Or can we cut the running time of mergesort? Is there anything else we can improve? Such as: 
+* Use insertion sort for small subarrays. 
+* Test whether the array is already in order. 
+* Eliminate the copy to the auxiliary array. 
+
 ##### Bottom-up mergesort
+
+{% highlight java %}
+public class MergeBU
+{
+	private static Comparable[] aux; // auxiliary array for merges
+ 	// See merge() code on Abstract In-place Merge.
+ 	public static void sort(Comparable[] a)
+ 	{ // Do lg N passes of pairwise merges.
+ 		int N = a.length;
+ 		aux = new Comparable[N];
+ 		for (int sz = 1; sz < N; sz = sz+sz) // sz: subarray size
+ 			for (int lo = 0; lo < N-sz; lo += sz+sz) // lo: subarray index
+ 				merge(a, lo, lo+sz-1, Math.min(lo+sz+sz-1, N-1));
+ 	}
+}
+{% endhighlight %}
+
+**Proposition H**
+Bottom-up mergesort uses between $1/2 N lg N$ and $N lg N$ compares and at most $6N lg N$ 
+array accesses to sort an array of length $N$.
+
+A version of bottom-up mergesort is the method of choice for sorting data organized in a 
+linked list. Consider the list to be sorted sublists of size 1, then pass through to make
+sorted subarrays of size 2 linked together, then size 4, and so forth. This method rearranges
+the links to sort the list in place (without creating any new list nodes).
+
+When the array length is a power of 2, top-down and bottom-up mergesort perform precisely 
+the same compares and array accesses, just in a different order. 
 
 ##### The complexing of sorting
 
+**Proposition I** 
+
+No compare-based sorting algorithm can guarantee to sort $N$ items with fewer than $lg(N !) ~ N lg N$ compares.
+
+**Proposition J**
+Mergesort is an asymptotically optimal compare-based sorting algorithm.
+
+Why we considering the upper bounds and lower bounds in algorithms?
+* First, good upper bounds allow software engineers to provide performance guarantees; there 
+  are many documented instances where poor performance has been traced to someone using a 
+  quadratic sort instead of a linearithmic one.
+* Second, good lower bounds spare us the effort of searching for performance improvements 
+  that are not attainable. 
+
 2.3 Quicksort
 -------------
+
+Quicksor is probably used more widely than any others. The reason is simple, because it works well 
+for a variety of different kinds of input data, and is substantially faster than any other sorting 
+method in typical applications. The advantages are that it is in-place (uses only a small auxiliary
+ stack) and that it requires time proportional to $N log N$ on the average to sort an array of 
+length $N$.
+
+The Idea of Quicksort:
+Quicksort is complementary to mergesort: for mergesort, we break the array into small subarrays 
+to be sorted and then combine the ordered subarrays to make the whole ordered array; for quicksort,
+we rearrange the array during the procession that we divide the whole ararry into small subarrays.
+Once the small subarrays are sorted, the whole array is ordered. 
+
+Rearranges the array to make the following three conditions hold:
+The entry a[j] is in its final place in the array, for some j.
+No entry in a[lo] through a[j-1] is greater than a[j].
+No entry in a[j+1] through a[hi] is less than a[j].
+
+![sample post]({{site.baseurl}}/images/algorithms4/partitioning-overview.png)
+
+The partitioning method Steps:
+
+1. Choose a mid-item to be the partitioning item, whicn will go into its final position. Usually we
+   choose the left-hand item or right-hand item.
+2. Get the index of each side of the mid-tiem except the mid-item. 
+3. Iterating from the two sides to the middle, during every iteration we need to compare and sort 
+   them, respectively.
+4. Repeat step 3 until the two index of the two side meet each other. Here, the left side is the 
+   items that are less than the mid-item, and the right side is the items are greater than mid-item.
+5. Repeat the whole steps until the subarrays can not divide at all.
+
+{% highlight java %}
+
+private static int partition(Comparable[] a, int lo, int hi)
+{ // Partition into a[lo..i-1], a[i], a[i+1..hi].
+	int i = lo, j = hi+1; // left and right scan indices
+ 	Comparable v = a[lo]; // partitioning item
+ 	while (true)
+ 	{ // Scan right, scan left, check for scan complete, and exchange.
+		while (less(a[++i], v)) if (i == hi) break;
+ 		while (less(v, a[--j])) if (j == lo) break;
+ 		if (i >= j) break;
+ 		exch(a, i, j);
+ 	}
+ 	exch(a, lo, j); // Put v = a[j] into position
+ 	return j; // with a[lo..j-1] <= a[j] <= a[j+1..hi].
+}
+
+{% endhighlight %}
+
+**Implementation details**
+
+* Partitioning inplace. 
+  If we use an extra array, partitioning is easy to implement, but not so much easier that
+  it is worth the extra cost of copying the partitioned version back into the original.
+
+* Staying in bounds. 
+  If the smallest item or the largest item in the array is the partitioning item, we have to
+  take care that the pointers do not run off the left or right ends of the array, respectively.
+
+* Preserving randomness. 
+  The random shuffle puts the array in random order.
+
+* Terminating the loop. 
+  Properly testing whether the pointers have crossed is a bit trickier than it might seem at 
+  first glance. A common error is to fail to take into account that the array might contain 
+  other keys with the same value as the partitioning item.
+
+* Handling items with keys equal to the partitioning item's key. 
+  It is best to stop the left scan for items with keys greater than or equal to the partitioning 
+  item's key and the right scan for items less than or equal to the partitioning item's key. Even
+  though this policy might seem to create unnecessary exchanges involving items with keys equal to
+  the partitioning item's key, it is crucial to avoiding quadratic running time in certain typical
+  applications.
+
+* Terminating the recursion. 
+  A common mistake is we can not ensuring the partitioning item is always put into position, then 
+  falling into an infinite recursive loop when the partitioning item happens to be the largest or smallest item in the array.
+
+
+
+
+
+
 
 
 

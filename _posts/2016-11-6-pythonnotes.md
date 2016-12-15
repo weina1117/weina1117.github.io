@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Regular Expression in python
+title: Python Notes
 ---
 
 Here includes:
