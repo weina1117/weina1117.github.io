@@ -457,15 +457,52 @@ private static int partition(Comparable[] a, int lo, int hi)
 
 * Terminating the recursion. 
   A common mistake is we can not ensuring the partitioning item is always put into position, then 
-  falling into an infinite recursive loop when the partitioning item happens to be the largest or smallest item in the array.
+  falling into an infinite recursive loop when the partitioning item happens to be the largest or 
+  smallest item in the array.
 
+**Algorithmic improvements**
+Quicksort was invented in 1960 by C. A. R. Hoare. Almost from this moment, people began trying to
+find ways to improve this algorithm. Not all of these ideas are fully successful, because this 
+algorithm is so well-balanced that the effects of improvements can be more than offset by
+unexpected side effects, but a few of them, which we now consider, are quite effective.
 
+* The first improvement is based on Quicksort is slower then insertion sort for tiny subarrays, so
+  once dealing with tiny subarrarys we could considering insertion sort.
 
+* In the real cases, most arrays have large number of duplicate keys, we could consider to divide
+  the arrays into three subarrays, one part keys are less than the middle items value, second
+  part keys are equals the middle items value, and the rest are the third part, its keys are greater
+  than the middle items value. This method we called 3-way partitioning:
+   
+{% highlight java %}
+public class Quick3way
+{
+	private static void sort(Comparable[] a, int lo, int hi)
+ 	{ // See Quicksort code for public sort() that calls this method.
+ 		if (hi <= lo) return;
+ 		int lt = lo, i = lo+1, gt = hi;
+ 		Comparable v = a[lo];
+ 		while (i <= gt)
+ 		{
+ 			int cmp = a[i].compareTo(v);
+ 			if (cmp < 0) exch(a, lt++, i++);
+ 			else if (cmp > 0) exch(a, i, gt--);
+ 			else i++;
+ 		} // Now a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi].
+ 		sort(a, lo, lt - 1);
+ 		sort(a, gt + 1, hi);
+ 	}
+}
+{% endhighlight %}
 
+As with standard quicksort, the running time tends to the average as the array size grows, and large 
+deviations from the average are extremely unlikely, so we use 3-way quicksort since it reduces the 
+time of the sort from linearithmic to linear for arrays with large numbers of duplicate keys. And this
+is independent of the element sorting. So 3-way quicksort turns out to be best in that situation. And the
+improved Quicksort is widely as well.
 
-
-
-
+To sorting the tens of millions of arrays, let's see the runnint time: 
+`Quick` > `Merge` > `Shell` > `Insertion` > `Selection`
 
 2.4 Priority Queues
 -------------------

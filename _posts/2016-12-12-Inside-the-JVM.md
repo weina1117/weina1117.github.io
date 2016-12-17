@@ -84,12 +84,41 @@ Memory Management of Java Virtual Machine
 
 ##### Stack
 
+This is an exacutive area of a thread, it holds the state of current method in discrete frame.
+And in this stack, each method has its frame. The frame is a unit of the stack. The Java virtual 
+machine only performs two operations directly on Java Stacks: it pushes and pops frames. When a 
+thread invokes a Java method, the virtual machine creates and pushes a new frame onto the thread's
+Java stack. This new frame then becomes the current frame. As the method executes, it uses the 
+frame to store parameters, local variables, intermediate computations, and other data. When a method
+completes, whether normally or abruptly, the Java virtual machine pops and discards the method's 
+stack frame. The frame for the previous method then becomes the current frame.
+
 ##### Heap
+
+One java virtual machine instance has only one heap, the size of the memory for heap could adjust. 
+The Objects are stored in heap, the object cannot assigned in the stack. One java virtual machine has 
+one heap. But all threads shared the data or the objects of this heap. The virtual machine has its own
+way to deciding whether and when to free memory occupied by objects that are no longer referenced by 
+the running application. Usually, a Java virtual machine implementation uses a garbage collector to 
+manage the heap automatically. So the Garbage Collector is the most important management area is heap 
+in java virtual machine.
 
 ##### Method Area
 
-##### Object
+Inside a Java virtual machine instance, information about loaded types is stored in a logical area of
+memory called the method area. If curren thread exacuting the local C or C++ data, then the method will
+exacute in the local menthod stack instead of java stack. Java stack exacutes only java method. 
 
-##### PC counter
+Method area shared by all the threads, the virtual machine extracts information about the type from the 
+binary data and stores the information in the method area. Memory for class (static) variables declared
+in the class is also taken from the method area. The virtual machine will search through and use the 
+type information stored in the method area as it executes the application it is hosting. Method area
+protects all the informations.
 
-##### Exacution
+##### Program counter
+
+Each thread has its own pc register, or program counter, which is created when the thread is started. 
+The pc register is one word in size, so it can hold both a native pointer and a returnAddress. As a 
+thread executes a Java method, the pc register contains the current address that  being executed by 
+the thread. An "address" can be a native pointer or an offset from the beginning of a method's bytecodes.
+If a thread is executing a native method, the value of the pc register is undefined.
