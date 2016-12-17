@@ -164,6 +164,7 @@ and within a small constant factor of one another for randomly ordered arrays of
 distinct values.
 
 {% highlight java %}
+
 public class SortCompare
 {
 	public static double time(String alg, Double[] a)
@@ -209,6 +210,7 @@ insertion sort independently on each of the h subsequences.This methord reduces 
 implementation to an insertion-sort-like pass through the array for each increment.  
 
 {% highlight java %}
+
 public class Shell
 {
 	public static void sort(Comparable[] a)
@@ -228,6 +230,7 @@ public class Shell
  	}
  	// See page 245 for less(), exch(), isSorted(), and main().
 }
+
 {% endhighlight %}
 
 **Property E.**
@@ -267,9 +270,12 @@ Figure f, repeat the process in Figure b.
 ![sample post]({{site.baseurl}}/images/algorithms4/f.png)
  
 {% highlight java  %}
+
 // Abstract In-place Merge
+
 public static void merge(Comparable[] a, int lo, int mid, int hi)
 { // Merge a[lo..mid] with a[mid+1..hi].
+
 	int i = lo, j = mid+1;
 
 	for (int k = lo; k <= hi; k++)           // Copy a[lo..hi] to aux[lo..hi].
@@ -280,6 +286,7 @@ public static void merge(Comparable[] a, int lo, int mid, int hi)
 		else if (less(aux[j], aux[i])) a[k] = aux[j++];
 		else a[k] = aux[i++];
 }
+
 {% endhighlight %}
 
 For the second for loop, there are four conditions: 
@@ -294,6 +301,7 @@ This is a recursive mergesort implementation based on the abstract in-place merg
 best-known examples of the divide-and-conquer utility fot the algorithm design.
 
 {% highlight java %}
+
 public class Merge
 {
 	private static Comparable[] aux;        // auxiliary array for merges
@@ -335,6 +343,7 @@ method? Or can we cut the running time of mergesort? Is there anything else we c
 ##### Bottom-up mergesort
 
 {% highlight java %}
+
 public class MergeBU
 {
 	private static Comparable[] aux; // auxiliary array for merges
@@ -348,6 +357,7 @@ public class MergeBU
  				merge(a, lo, lo+sz-1, Math.min(lo+sz+sz-1, N-1));
  	}
 }
+
 {% endhighlight %}
 
 **Proposition H**
@@ -387,7 +397,8 @@ method in typical applications. The advantages are that it is in-place (uses onl
  stack) and that it requires time proportional to $N log N$ on the average to sort an array of 
 length $N$.
 
-The Idea of Quicksort:
+##### The Idea of Quicksort
+
 Quicksort is complementary to mergesort: for mergesort, we break the array into small subarrays 
 to be sorted and then combine the ordered subarrays to make the whole ordered array; for quicksort,
 we rearrange the array during the procession that we divide the whole ararry into small subarrays.
@@ -400,7 +411,7 @@ No entry in a[j+1] through a[hi] is less than a[j].
 
 ![sample post]({{site.baseurl}}/images/algorithms4/partitioning-overview.png)
 
-The partitioning method Steps:
+##### The partitioning method Steps
 
 1. Choose a mid-item to be the partitioning item, whicn will go into its final position. Usually we
    choose the left-hand item or right-hand item.
@@ -430,7 +441,7 @@ private static int partition(Comparable[] a, int lo, int hi)
 
 {% endhighlight %}
 
-**Implementation details**
+##### Implementation details
 
 * Partitioning inplace. 
   If we use an extra array, partitioning is easy to implement, but not so much easier that
@@ -460,7 +471,8 @@ private static int partition(Comparable[] a, int lo, int hi)
   falling into an infinite recursive loop when the partitioning item happens to be the largest or 
   smallest item in the array.
 
-**Algorithmic improvements**
+##### Algorithmic improvements
+
 Quicksort was invented in 1960 by C. A. R. Hoare. Almost from this moment, people began trying to
 find ways to improve this algorithm. Not all of these ideas are fully successful, because this 
 algorithm is so well-balanced that the effects of improvements can be more than offset by
@@ -475,6 +487,7 @@ unexpected side effects, but a few of them, which we now consider, are quite eff
   than the middle items value. This method we called 3-way partitioning:
    
 {% highlight java %}
+
 public class Quick3way
 {
 	private static void sort(Comparable[] a, int lo, int hi)
@@ -493,6 +506,7 @@ public class Quick3way
  		sort(a, gt + 1, hi);
  	}
 }
+
 {% endhighlight %}
 
 As with standard quicksort, the running time tends to the average as the array size grows, and large 
@@ -506,6 +520,37 @@ To sorting the tens of millions of arrays, let's see the runnint time:
 
 2.4 Priority Queues
 -------------------
+
+For example, our cellphones are likely to process an incoming call with higher priority than a game 
+application. To support this function need to ordering the appropriate data type through these two 
+operations: remove the maximum and insert. Such a data type is called a priority queue. 
+
+Using priority queues is similar to using queues (remove the oldest) and stacks (remove the newest),
+but every element in the queue has its own priority, once we dealing with them, we operate the highest 
+priority element at first, if there are two equally higher priority elements, implementing them by their 
+input order, respectively. We could implemente the priority queues by linked-list, arrays, heap and 
+other data structures. 
+
+##### Array representation
+
+**Costs of finding the largest M in a stream of N items**
+
+|client                                      | order of growth            |
+|                                            | time       |     space     |
+|:-------------------------------------------|:----------:|:-------------:|
+|sort client                                 | N log N    | N             |
+|PQ client using elementary implementation   | NM         | M             |
+|PQ client using heap-based implementation   | N log M    | M             |
+
+
+
+
+
+
+
+
+
+##### Binary representation
 
 
 
