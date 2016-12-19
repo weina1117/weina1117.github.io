@@ -542,17 +542,171 @@ other data structures.
 |PQ client using elementary implementation   | NM         | M             |
 |PQ client using heap-based implementation   | N log M    | M             |
 
+* Array representation (unordered). Perhaps the simplest priority queue implementation is based on our 
+code for pushdown stacks. The code for insert in the priority queue is the same as for push in the stack.
+To implement remove the maximum, we can add code like the inner loop of selection sort to exchange the 
+maximum item with the item at the end and then delete that one, as we did with pop() for stacks.
 
+* Array representation (ordered). Another approach is to add code for insert to move larger entries one 
+position to the right, thus keeping the entries in the array in order (as in insertion sort). Thus the 
+largest item is always at the end, and the code for remove the maximum in the priority queue is the same 
+as for pop in the stack. 
 
+* Linked-list representations (unordered and reverse-ordered). Similarly, we can start with our linked-list
+code for pushdown stacks, either modifying the code for pop() to find and return the maximum or the code for
+push() to keep items in reverse order and the code for pop() to unlink and return the first (maximum) item 
+on the list.
 
-
-
-
-
+**Proposition O**
+The largest key in a heap-ordered binary tree is found at the root.
 
 ##### Binary representation
 
+**Heap:**
+The binary heap is a data structure that can efficiently support the basic priority-queue operations. In a 
+binary heap, the items are stored in an array such that each key is guaranteed to be larger than (or equal to)
+the keys at two other specific positions. In turn, each of those keys must be larger than two more keys, and 
+so forth. A binary tree is heap-ordered if the key in each node is larger than (or equal to) the keys in that 
+nodes two children (if any).
 
+In a heap, the parent of the node in position $k$ is in position $k/2$; and, conversely, the two children of 
+the node in position k are in positions $2k$ and $2k + 1$. We can travel up and down by doing simple arithmetic
+on array indices: to move up the tree from $a[k]$ we set $k$ to $k/2$; to move down the tree we set $k$ to 
+$2\*k$ or $2\*k+1$.
+
+**Proposition P**
+The height of a complete binary tree of size $N$ is $lg N$.
+
+* Bottom-up reheapify (swim)
+  If the heap order is violated because a node's key becomes larger than that node's parents key, then we can make
+  progress toward fixing the violation by exchanging the node with its parent. After the exchange, the node is 
+  larger than both its children (one is the old parent, and the other is smaller than the old parent because it was
+  a child of that node) but the node may still be larger than its parent. We can fix that violation in the same way,
+  and so forth, moving up the heap until we reach a node with a larger key, or the root.
+
+{% highlight java %}
+
+private void swim(int k) {
+   while (k > 1 && less(k/2, k)) {
+      exch(k, k/2);
+      k = k/2;
+   }
+}
+
+{% endhighlight %}
+
+* Top-down heapify (sink)
+  If the heap order is violated because a node's key becomes smaller than one or both of that node's children's keys,
+  then we can make progress toward fixing the violation by exchanging the node with the larger of its two children.
+  This switch may cause a violation at the child; we fix that violation in the same way, and so forth, moving down the
+  heap until we reach a node with both children smaller, or the bottom.
+
+{% highlight java %}
+
+private void sink(int k) {
+   while (2\*k <= N) {
+      int j = 2*k;
+      if (j < N && less(j, j+1)) j++;
+      if (!less(k, j)) break;
+      exch(k, j);
+      k = j;
+   }
+}
+
+{% endhighlight %}
+
+**Heap-based priority queue**
+
+* insert.
+  We add the new item at the end of the array, increment the size of the heap, and then swim up through the heap
+  with that item to restore the heap condition.
+* Remove the maximum.
+  We take the largest item off the top, put the item from the end of the heap at the top, decrement the size of 
+  the heap, and then sink down through the heap with that item to restore the heap condition.
+
+Heap priority queue
+{% highlight java %}
+public class MaxPQ<Key extends Comparable<Key>>
+{
+	private Key[] pq;          // heap-ordered complete binary tree
+ 	private int N = 0;         // in `pq[1..N]` with `pq[0]` unused
+ 	public MaxPQ(int maxN)
+ 	{ pq = (Key[]) new Comparable[maxN+1]; }
+ 	public boolean isEmpty()
+ 	{ return N == 0; }
+ 	public int size()
+ 	{ return N; }
+ 	public void insert(Key v)
+ 	{
+ 	pq[++N] = v;
+ 	swim(N);
+ 	}
+ 	public Key delMax()
+ 	{
+ 		Key max = pq[1];       // Retrieve max key from top.
+ 		exch(1, N--);          // Exchange with last item.
+ 		pq[N+1] = null;        // Avoid loitering.
+ 		sink(1);               // Restore heap property.
+ 		return max;
+ 	}
+ 	// See pages 145-147 for implementations of these helper methods.
+ 	private boolean less(int i, int j)
+ 	private void exch(int i, int j)
+ 	private void swim(int k)
+ 	private void sink(int k)
+}
+
+{% endhighlight %}
+
+**Proposition Q**
+In an $N$-key priority queue, the heap algorithms require no more than $1 + lg N$ compares for insert
+and no more than $2 lg N$ compares for remove the maximum.
+
+**Practical considerations**
+We conclude our study of the heap priority queue API with a few practical considerations.
+* Multiway heaps. 
+  It is not difficult to modify our code to build heaps based on an array representation of complete heap-ordered
+  ternary or d-ary trees. There is a tradeoff between the lower cost from the reduced tree height and the higher 
+  cost of finding the largest of the three or d children at each node.
+* Array resizing.
+  We can add a no-argument constructor, code for array doubling in `insert()`, and code for array halving in 
+  `delMax()`. The logarithmic time bounds are amortized when the size of the priority queue is arbitrary and
+   the arrays are resized.
+* Immutability of keys. 
+  The priority queue contains objects that are created by clients but assumes that the client code does not change
+  the keys (which might invalidate the heap invariants).
+* Index priority queue.
+  In many applications, it makes sense to allow clients to refer to items that are already on the priority queue. 
+  One easy way to do so is to associate a unique integer index with each item.
+
+**Heapsort**
+
+* Heap construction. 
+  We can accomplish this task in time proportional to $N lg N$, by proceeding from left to right through the array,
+  using `swim()` to ensure that the entries to the left of the scanning pointer make up a heap-ordered complete tree,
+  like successive priority queue insertions. A clever method that is much more efficient is to proceed from right to
+  left, using `sink()` to make subheaps as we go. Every position in the array is the root of a small subheap; `sink()`
+  works or such subheaps, as well. If the two children of a node are heaps, then calling `sink()` on that node makes
+  the subtree rooted there a heap.
+
+* Sortdown. 
+  Most of the work during heapsort is done during the second phase, where we remove the largest remaining items from 
+  the heap and put it into the array position vacated as the heap shrinks.
+
+{% highlight java %}
+public static void sort(Comparable[] a)
+{
+	int N = a.length;
+	for (int k = N/2; k >= 1; k--)
+		sink(a, k, N);
+	while (N > 1)
+	{
+		exch(a, 1, N--);
+		sink(a, 1, N);
+	}
+}
+
+{% endhighlight %}
 
 2.5 Applications
 ----------------
