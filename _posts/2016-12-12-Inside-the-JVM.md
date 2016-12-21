@@ -84,7 +84,7 @@ Memory Management of Java Virtual Machine
 
 ##### Stack
 
-This is an exacutive area of a thread, it holds the state of current method in discrete frame.
+This is an executive area of a thread, it holds the state of current method in discrete frame.
 And in this stack, each method has its frame. The frame is a unit of the stack. The Java virtual 
 machine only performs two operations directly on Java Stacks: it pushes and pops frames. When a 
 thread invokes a Java method, the virtual machine creates and pushes a new frame onto the thread's
