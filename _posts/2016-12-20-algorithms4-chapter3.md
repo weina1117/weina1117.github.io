@@ -1,0 +1,419 @@
+---
+layout: post
+title: Algorithms 4th Chapter 3
+---
+
+Chapter 3 Searching
+----------------------
+
+This chapter will cover these five main topics:
+
+- [3.1 Symbol Tables](#31-symbol-tables)
+- [3.2 Binary Search Trees](#32-binary-search-trees)
+- [3.3 Balanced Search Trees](#33-balanced-search-trees)
+- [3.4 Hash Tables](#34-hash-tables)
+- [3.5 Applications](#35-applications)
+
+3.1 Symbol Tables
+-----------------
+
+**Symbol table**
+The symbol table is data structure and its purpose is to associate a value with a key.
+
+It supports two operations: insert (put) a new pair into the table 
+                            search for (get) the value associated with a given key.
+
+Several design choices for the implementations:
+* Generics. 
+  We consider the methods without specifying the types of keys and values being
+   processed, using generics.
+* Duplicate keys.
+  No duplicate keys in a table since the new value will replaces the old one. Only one 
+  value is associated with each key. 
+* Null keys. 
+  Keys must not be `null`. As with many mechanisms in Java, use of a `null` key results in
+  an exception at runtime.
+* Null values. 
+  No key can be associated with the value `null`. That means `get()` should return `null`
+  for keys not in the table. Two (intended) consequences: First, we can test whether or not 
+  the symbol table defines a value associated with a given key by testing whether `get()` 
+  returns `null`. Second, we can use the operation of calling `put()`with null as its second 
+  (value) argument to implement deletion.
+* Deletion. 
+  Two types of deletion: lazy deletion, at first we associate keys in the table with null, 
+  then perhaps remove all such keys at some later time, the code `put(key, null)` is an 
+  easy (lazy) implementation of `delete(key)`. Eager deletion, where we remove 
+  the key from the table immediately and the implementation of `delete()`, it is intended
+  to replace this default.
+* Iterators.
+  The `keys()` method returns an Iterable<Key> object for clients to use to iterate through the keys.
+* Key equality.
+  Java requires that all objects implement an `equals()` method and provides implementations both for
+   standard types such as `Integer`, `Double`, and `String` and for more complicated types such as `Date`, 
+   `File` and `URL`. For applications involving these types of data, you can just use the built-in 
+   implementation. 
+
+**Ordered symbol tables** 
+  In typical applications, keys are `Comparable` objects, so the option exists of using the code
+  `a.compareTo(b)` to compare two keys `a` and `b`. Several symbol-table implementations take advantage
+   of order among the keys that is implied by `Comparable` to provide efficient implementations of the 
+  `put()` and `get()` operations.
+
+**Searching cost model**
+  That is we count compares (equality tests or key comparisons). In (rare) cases where compares are not 
+  in the inner loop, we count array accesses. 
+
+A symbol-table client
+
+{% highlight java %}
+public class FrequencyCounter
+{
+	public static void main(String[] args)
+ 	{
+ 		int minlen = Integer.parseInt(args[0]); // key-length cutoff
+ 		ST<String, Integer> st = new ST<String, Integer>();
+ 		while (!StdIn.isEmpty())
+ 		{ // Build symbol table and count frequencies.
+ 			String word = StdIn.readString();
+ 			if (word.length() < minlen) continue; // Ignore short keys.
+ 			if (!st.contains(word)) st.put(word, 1);
+ 			else st.put(word, st.get(word) + 1);
+ 		}
+ 		// Find a key with the highest frequency count.
+ 		String max = "";
+ 		st.put(max, 0);
+ 		for (String word : st.keys())
+ 			if (st.get(word) > st.get(max))
+ 				max = word;
+ 		StdOut.println(max + " " + st.get(max));
+ 	}
+}
+
+{% endhighlight %}
+
+FrequencyCounter is surrogate for a very common situation. Specifically, it has 
+the following characteristics, which are shared by many other symbol-table clients:
+* Search and insert operations are intermixed.
+* The number of distinct keys is not small.
+* Substantially more searches than inserts are likely.
+* Search and insert patterns, though unpredictable, are not random
+
+Sequential search (in an unordered linked list)
+
+{% highlight java %}
+public class SequentialSearchST<Key, Value>
+{
+	private Node first; // first node in the linked list
+ 	private class Node
+ 	{ // linked-list node
+ 		Key key;
+ 		Value val;
+ 		Node next;
+ 		public Node(Key key, Value val, Node next)
+ 		{
+ 			this.key = key;
+ 			this.val = val;
+ 			this.next = next;
+ 		}
+ 	}
+
+ 	public Value get(Key key)
+ 	{ // Search for key, return associated value.
+ 		for (Node x = first; x != null; x = x.next)
+ 			if (key.equals(x.key))
+ 				return x.val; // search hit
+ 		return null; // search miss
+ 	}
+ 	
+	public void put(Key key, Value val)
+ 	{ // Search for key. Update value if found; grow table if new.
+ 		for (Node x = first; x != null; x = x.next)
+ 			if (key.equals(x.key))
+ 			{ x.val = val; return; } // Search hit: update val.
+ 		first = new Node(key, val, first); // Search miss: add new node.
+ 	}
+}
+
+{% endhighlight %}
+
+**Proposition A**
+Unsuccessful search and insert in an unordered linked-list symbol table both use $N$ compares, 
+and successful search uses $N$ compares in the worst case. In particular, inserting $N$ keys 
+into an initially empty linked-list symbol table uses $~N^2/2$ compares.
+
+**Binary search in an ordered array**
+The heart of the implementation is the `rank()` method, which returns the number of keys smaller
+than a given key. For `get()`, the rank tells us precisely where the key is to be found if it is
+in the table (and, if it is not there, that it is not in the table). For `put()`, the rank tells
+us precisely where to update the value when the key is in the table, and precisely where to put 
+the key when the key is not in the table. We move all larger keys over one position to make room
+(working from back to front) and insert the given key and value into the proper positions in 
+their respective arrays.
+
+**Proposition B**
+Binary search in an ordered array with $N$ keys uses no more than $lg N + 1$ compares for a search
+(successful or unsuccessful) in the worst case.
+
+**Proposition C** 
+Inserting a new key into an ordered array uses $~ 2N$ array accesses in the worst case, so inserting
+$N$ keys into an initially empty table uses $~ N^2$ array accesses in the worst case.
+
+3.2 Binary Search Trees
+------------------------
+
+Binary Search Tree (BST) is a binary tree where each node has a Comparable key (and an associated 
+value) and satisfies the restriction that the key in any node is larger than the keys in all nodes in
+that node's left subtree and smaller than the keys in all nodes in that node's right subtree. Each node
+contains a key, a value, a left link, a right link, and a node count. The left link points to a BST for
+items with smaller keys, and the right link points to a BST for items with larger keys. The instance 
+variable $N$ gives the node count in the subtree rooted at the node. The running times of algorithms 
+on binary search trees depend on the shapes of the trees, which, in turn, depends on the order in 
+which keys are inserted.
+
+* Search. 
+A recursive algorithm to search for a key in a BST follows immediately from the recursive structure: If
+the tree is empty, we have a search miss; if the search key is equal to the key at the root, we have a 
+search hit. Otherwise, we search (recursively) in the appropriate subtree. The recursive `get()` method
+implements this algorithm directly. It takes a node (root of a subtree) as first argument and a key as 
+second argument, starting with the root of the tree and the search key.
+
+* Insert. 
+Insert is not much more difficult to implement than search. Indeed, a search for a key not in the tree 
+ends at a null link, and all that we need to do is replace that link with a new node containing the key. 
+The recursive `put()` method accomplishes this task using logic similar to that we used for the recursive
+search: If the tree is empty, we return a new node containing the key and value; if the search key is 
+less than the key at the root, we set the left link to the result of inserting the key into the left 
+subtree; otherwise, we set the right link to the result of inserting the key into the right subtree.
+
+Binary search tree symbol table
+
+{% highlight java %}
+public class BST<Key extends Comparable<Key>, Value>
+{
+	private Node root; // root of BST
+ 	
+	private class Node
+ 	{
+ 		private Key key; // key
+ 		private Value val; // associated value
+ 		private Node left, right; // links to subtrees
+ 		private int N; // # nodes in subtree rooted here
+ 	
+		public Node(Key key, Value val, int N)
+ 		{ this.key = key; this.val = val; this.N = N; }
+ 	}
+ 	public int size()
+ 	{ return size(root); }
+ 	
+	private int size(Node x)
+ 	{
+ 		if (x == null) return 0;
+ 		else return x.N;
+ 	}
+ 	
+	// See page 399 for public Value get(Key key)
+	// See page 399 for public void put(Key key, Value val)
+	public Value get(Key key)
+	{ return get(root, key); }
+	private Value get(Node x, Key key)
+	{ // Return value associated with key in the subtree rooted at x;
+	 // return null if key not present in subtree rooted at x.
+		if (x == null) return null;
+		int cmp = key.compareTo(x.key);
+		if (cmp < 0) return get(x.left, key);
+		else if (cmp > 0) return get(x.right, key);
+		else return x.val;
+	}
+	public void put(Key key, Value val)
+	{ // Search for key. Update value if found; grow table if new.
+		root = put(root, key, val);
+	}
+	private Node put(Node x, Key key, Value val)
+	{
+	// Change key’s value to val if key in subtree rooted at x.
+	// Otherwise, add new node to subtree associating key with val.
+		if (x == null) return new Node(key, val, 1);
+		int cmp = key.compareTo(x.key);
+		if (cmp < 0) x.left = put(x.left, key, val);
+		else if (cmp > 0) x.right = put(x.right, key, val);
+		else x.val = val;
+		x.N = size(x.left) + size(x.right) + 1;
+		return x;
+	}
+
+ 	// See page 407 for min(), max(), floor(), and ceiling().
+	public Key min()
+	{
+		return min(root).key;
+	}
+	private Node min(Node x)
+	{
+		if (x.left == null) return x;
+		return min(x.left);
+	}
+	public Key floor(Key key)
+	{
+		Node x = floor(root, key);
+	 	if (x == null) return null;
+	 	return x.key;
+	}
+	private Node floor(Node x, Key key)
+	{
+		if (x == null) return null;
+	 	int cmp = key.compareTo(x.key);
+	 	if (cmp == 0) return x;
+	 	if (cmp < 0) return floor(x.left, key);
+	 	Node t = floor(x.right, key);
+	 	if (t != null) return t;
+	 	else return x;
+	}
+
+	// See page 409 for select() and rank().
+	public Key select(int k)
+	{
+		return select(root, k).key;
+	}
+	private Node select(Node x, int k)
+	{	// Return Node containing key of rank k.
+		if (x == null) return null;
+	 	int t = size(x.left);
+	 	if (t > k) return select(x.left, k);
+	 	else if (t < k) return select(x.right, k-t-1);
+	 	else return x;
+	}
+	public int rank(Key key)
+	{ return rank(key, root); }
+	private int rank(Key key, Node x)
+	{	// Return number of keys less than x.key in the subtree rooted at x.
+		if (x == null) return 0;
+	 	int cmp = key.compareTo(x.key);
+	 	if (cmp < 0) return rank(key, x.left);
+	 	else if (cmp > 0) return 1 + size(x.left) + rank(key, x.right);
+	 	else return size(x.left);
+	}
+	
+
+ 	// See page 411 for delete(), deleteMin(), and deleteMax().
+	public void deleteMin()
+	{
+		root = deleteMin(root);
+	}
+	private Node deleteMin(Node x)
+	{
+	 	if (x.left == null) return x.right;
+		x.left = deleteMin(x.left);
+	 	x.N = size(x.left) + size(x.right) + 1;
+		return x;
+	}
+	public void delete(Key key)
+	{	root = delete(root, key); }
+	private Node delete(Node x, Key key)
+	{
+		if (x == null) return null;
+	 	int cmp = key.compareTo(x.key);
+	 	if (cmp < 0) x.left = delete(x.left, key);
+	 	else if (cmp > 0) x.right = delete(x.right, key);
+	 	else
+	 	{
+	 		if (x.right == null) return x.left;
+	 		if (x.left == null) return x.right;
+	 		Node t = x;
+	 		x = min(t.right); // See page 407.
+	 		x.right = deleteMin(t.right);
+	 		x.left = t.left;
+	 	}
+	 	x.N = size(x.left) + size(x.right) + 1;
+	 	return x;
+	}
+
+ 	// See page 413 for keys().
+	public Iterable<Key> keys()
+	{	return keys(min(), max()); }
+	public Iterable<Key> keys(Key lo, Key hi)
+	{
+	 	Queue<Key> queue = new Queue<Key>();
+	 	keys(root, queue, lo, hi);
+	 	return queue;
+	}
+	private void keys(Node x, Queue<Key> queue, Key lo, Key hi)
+	{
+		if (x == null) return;
+	 	int cmplo = lo.compareTo(x.key);
+	 	int cmphi = hi.compareTo(x.key);
+	 	if (cmplo < 0) keys(x.left, queue, lo, hi);
+	 	if (cmplo <= 0 && cmphi >= 0) queue.enqueue(x.key);
+	 	if (cmphi > 0) keys(x.right, queue, lo, hi);
+	}
+}
+
+{% endhighlight %}
+
+**Proposition C**
+Search hits in a BST built from $N$ random keys requires $~ 2 ln N$ (about $1.39 lg N$) compares on
+ the average.
+
+**Proposition D**
+Insertion and search misses in a BST built from $N$ random keys requires $~ 2 ln N$ (about $1.39 lg N$) 
+compares on the average.roposition.
+
+**Order-based methods and deletion**
+An important reason that BSTs are widely used is that they allow us to keep the keys in order. 
+
+* Minimum and maximum.
+If the left link of the root is null, the smallest key in a BST is the key at the root; 
+if the left link is not null, the smallest key in the BST is the smallest key in the subtree rooted at the 
+node referenced by the left link. Finding the maximum key is similar, moving to the right instead of to the left.
+
+* Floor and ceiling. 
+If a given key key is less than the key at the root of a BST, then the floor of key (the largest key in 
+the BST less than or equal to key) must be in the left subtree. If key is greater than the key at the root, 
+then the floor of key could be in the right subtree, but only if there is a key smaller than or equal to key
+in the right subtree; if not (or if key is equal to the key at the root) then the key at the root is the floor
+of key. Finding the ceiling is similar, interchanging right and left.
+
+* Selection. 
+Suppose that we seek the key of rank $k$ (the key such that precisely $k$ other keys in the BST are smaller). If the 
+number of keys $t$ in the left subtree is larger than $k$, we look (recursively) for the key of rank $k$ in the left 
+subtree; if $t$ is equal to $k$, we return the key at the root; and if $t$ is smaller than $k$, we look (recursively)
+ for the key of rank $k - t - 1$ in the right subtree.
+
+* Rank. 
+If the given key is equal to the key at the root, we return the number of keys $t$ in the left subtree; if the given
+key is less than the key at the root, we return the rank of the key in the left subtree; and if the given key is 
+larger than the key at the root, we return $t + 1$ (to count the key at the root) plus the rank of the key in the 
+right subtree.
+
+* Delete the minimum and maximum. 
+For delete the minimum, we go left until finding a node that that has a null left link and then replace the link to
+ that node by its right link. The symmetric method works for delete the maximum.
+
+* Delete. what can we do to delete a node that has two two links?
+The steps as follow:
+	* Save a link to the node to be deleted in `t`.
+	* Set `x` to point to its successor `min(t.right)`.
+	* Set the right link of `x` (which is supposed to point to the BST containing all the keys larger than `x.key`)
+      to deleteMin(`t.right`), the link to the BST containing all the keys that are larger than `x.key` after the deletion.
+	* Set the left link of `x` (which was null) to `t.left` (all the keys that are less than both the deleted key 
+      and its successor).
+
+* Range search. 
+To implement the `keys()` method that returns the keys in a given range, we begin with a basic 
+recursive BST traversal method, known as inorder traversal. To illustrate the method, we consider 
+the task of printing all the keys in a BST in order. To do so, print all the keys in the left 
+subtree (which are less than the key at the root by definition of BSTs), then print the key at 
+the root, then print all the keys in the right subtree, (which are greater than the key at the 
+root by definition of BSTs).
+
+**Proposition E**
+In a BST, all operations take time proportional to the height of the tree, in the worst case.
+
+3.3 Balanced Search Trees
+-------------------------
+
+
+3.4 Hash Tables
+---------------
+
+
+3.5 Applications
+----------------
