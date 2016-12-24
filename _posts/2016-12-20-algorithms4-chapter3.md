@@ -410,6 +410,120 @@ In a BST, all operations take time proportional to the height of the tree, in th
 3.3 Balanced Search Trees
 -------------------------
 
+Balanced Search Trees is a type of binary search tree where costs are guaranteed to be logarithmic. 
+These trees have near-perfect balance, where the height is guaranteed to be no larger than 2 lg N.
+
+**2-3 search trees**
+To guarantee balance in search trees is to allow the nodes to hold more than one key. This means that 
+a 2-3 search tree is a tree that either is empty or:
+* A 2-node, with one key and two links, a left link to a 2-3 search tree with smaller keys, 
+  and a right link to a 2-3 search tree with larger keys
+* A 3-node, with two keys and three links, a left link to a 2-3 search tree with smaller keys, 
+  a middle link to a 2-3 search tree with keys between the node's keys and a right link to a 2-3 search tree
+  with larger keys.
+A perfectly balanced 2-3 search tree (or 2-3 tree for short) is one whose null links are all the 
+same distance from the root.
+
+![sample post]({{site.baseurl}}/images/algorithms4/23tree-anatomy.png)
+
+* Search
+
+![sample post]({{site.baseurl}}/images/algorithms4/23tree-1.png)
+
+![sample post]({{site.baseurl}}/images/algorithms4/23tree-2.png)
+
+* Insert into a 2-node
+
+![sample post]({{site.baseurl}}/images/algorithms4/23tree-3.png)
+
+* Insert into a tree consisting of a single 3-node
+
+![sample post]({{site.baseurl}}/images/algorithms4/23tree-4.png)
+
+* Insert into a 3-node whose parent is a 2-node
+
+![sample post]({{site.baseurl}}/images/algorithms4/23tree-5.png)
+
+* Insert into a 3-node whose parent is a 3-node
+
+![sample post]({{site.baseurl}}/images/algorithms4/23tree-6.png)
+
+* Splitting the root
+
+![sample post]({{site.baseurl}}/images/algorithms4/23tree-7.png)
+
+* Local transformations
+  The basis of the 2-3 tree insertion is that all of these transformations are purely local: 
+  No part of the 2-3 tree needs to be examined or modified other than the specified nodes and links.
+  The number of links changed for each transformation is bounded by a small constant. Each of the 
+  transformations passes up one of the keys from a 4-node to that nodes parent in the tree, and then
+  restructures links accordingly, without touching any other part of the tree.
+
+* Global properties
+  These local transformations preserve the global properties that the tree is ordered and balanced: 
+  the number of links on the path from the root to any null link is the same.
+
+**Proposition**
+Search and insert operations in a $2-3$ tree with $N$ keys are guaranteed to visit at most $lg N$ nodes.
+
+![sample post]({{site.baseurl}}/images/algorithms4/23tree-8.png)
+
+**Red-black BSTs**
+A simple representation known as a red-black BST.
+
+* Encoding 3-nodes
+To adding extra information to encode 3-nodes by starting with standard BSTs, whick are made up of 
+2-nodes, there are two different types: red links, which bind together two 2-nodes to represent 3-nodes,
+and black links, which bind together the 2-3 tree. Specifically, we represent 3-nodes as two 2-nodes 
+connected by a single red link that leans left. We refer to BSTs that represent 2-3 trees in this way 
+as red-black BSTs. One advantage of using such a representation is that it allows us to use our `get()` 
+code for standard BST search without modification.
+
+![sample post]({{site.baseurl}}/images/algorithms4/redblack-1.png)
+
+A given any 2-3 tree, we can immediately derive a corresponding red-black BST, just by converting 
+each node as specified. Conversely, if we draw the red links horizontally in a red-black BST, all 
+of the null links are the same distance from the root, and if we then collapse together the nodes 
+connected by red links, the result is a 2-3 tree.
+
+![sample post]({{site.baseurl}}/images/algorithms4/redblack-2.png)
+
+* Color representation
+Since each node is pointed to by one link from its parent, we encode the color of links in nodes,
+by adding a boolean instance variable color to our node, which is true if the link from the parent 
+is red and false if it is black. By convention, null links are black.
+
+![sample post]({{site.baseurl}}/images/algorithms4/redblack-3.png)
+
+* Rotations
+This operation called rotation that switches orientation of red links. First, suppose that we have 
+a right-leaning red link that needs to be rotated to lean to the left. This operation is called a 
+left rotation. Implementing a right rotation that converts a left-leaning red link to a right-leaning
+one amounts to the same code, with left and right interchanged.
+
+![sample post]({{site.baseurl}}/images/algorithms4/redblack-4.png)
+
+![sample post]({{site.baseurl}}/images/algorithms4/redblack-5.png)
+
+* Flipping colors
+The color flip operation flips the colors of the the two red children to black and the color of 
+the black parent to red.
+
+![sample post]({{site.baseurl}}/images/algorithms4/redblack-9.png)
+
+![sample post]({{site.baseurl}}/images/algorithms4/redblack-6.png)
+
+![sample post]({{site.baseurl}}/images/algorithms4/redblack-7.png)
+
+**Proposition**
+The height of a red-blackBST with $N$ nodes is no more than $2 lg N$.
+
+**Proposition**
+In a red-black BST, the following operations take logarithmic time in the worst case: search, 
+insertion, finding the minimum, finding the maximum, floor, ceiling, rank, select, delete the 
+minimum, delete the maximum, delete, and range count.
+
+The average length of a path from the root to a node in a red-black BST with $N$ nodes is $~1.00 lg N$.
 
 3.4 Hash Tables
 ---------------
