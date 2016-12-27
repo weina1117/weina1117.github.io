@@ -528,6 +528,84 @@ The average length of a path from the root to a node in a red-black BST with $N$
 3.4 Hash Tables
 ---------------
 
+We reference key-value pairs using arrays by doing arithmetic operations to transform keys into array indices.
+There are two steps throught hashing to do search algorithmes. The first step is to compute a hash function 
+that transforms the search key into an array index. Ideally, different keys would map to different indices. 
+But in the real case, we have to face the possibility that two or more different keys may hash to the same 
+array index. Thus, the second part of a hashing search is a collision-resolution process that deals with this 
+situation.
+
+![sample post]({{site.baseurl}}/images/algorithms4/hashing1.png)
+
+**Hash functions**
+If we have an array that can hold $M$ key-value pairs, then we need a function that can transform any given key
+into an index into that array: an integer in the range $[0, M-1]$. We seek a hash function that is both easy 
+to compute and uniformly distributes the keys.
+
+* Positive integers 
+The most commonly used method for hashing integers is called modular hashing: we choose the array size $M$ 
+to be prime, and, for any positive integer key $k$, compute the remainder when dividing $k$ by $M$. This 
+function is very easy to compute ($k % M$, in Java), and is effective in dispersing the keys evenly 
+between $0$ and $M-1$.
+
+* Floating-point numbers
+If the keys are real numbers between $0$ and $1$, we might just multiply by $M$ and round off to the nearest 
+integer to get an index between $0$ and $M-1$. Although it is intuitive, this approach is defective because 
+it gives more weight to the most significant bits of the keys; the least significant bits play no role. One
+way to address this situation is to use modular hashing on the binary representation of the key 
+(this is what Java does).
+
+* Strings
+Modular hashing works for long keys such as strings, too: we simply treat them as huge integers. For example, 
+the code below computes a modular hash function for a String s, where R is a small prime integer (Java uses 31).
+
+{% highlight java %}
+int hash = 0;
+for (int i = 0; i < s.length(); i++)
+    hash = (R * hash + s.charAt(i)) % M;
+{% endhighlight %}
+
+* Compound keys
+If the key type has multiple integer fields, we can typically mix them together in the way just described 
+for String values. For example, suppose that search keys are of type `USPhoneNumber.java`, which has three 
+integer fields area (3-digit area code), exch (3-digit exchange), and ext (4-digit extension). In this case,
+ we can compute the number
+
+{% highlight java %}
+
+int hash = (((area * R + exch) % M) * R + ext) % M; 
+
+{% endhighlight %}
+
+* Java conventions
+In Java every type of data needs a hash function by requiring that every data type must implement a 
+method called `hashCode()` (which returns a 32-bit integer). The implementation of `hashCode()` for 
+an object must be consistent with equals. That is, if `a.equals(b)` is true, then `a.hashCode()` must
+have the same numerical value as `b.hashCode()`. If the `hashCode()` values are the same, the objects 
+may or may not be equal, and we must use `equals()` to decide which condition holds.
+
+* Converting a `hashCode()` to an array index
+Since our goal is an array index, not a $32-bit$ integer, we combine `hashCode()` with modular hashing
+ in our implementations to produce integers between $0$ and $M-1$ as follows:
+
+{% highlight java %}
+private int hash(Key key) {
+   return (key.hashCode() & 0x7fffffff) % M;
+}
+{% endhighlight %}
+
+The code masks off the sign bit (to turn the 32-bit integer into a 31-bit nonnegative integer) and then 
+computing the remainder when dividing by $M$, as in modular hashing.
+
+* User-defined `hashCode()`. 
+For any object `x`, we can write `x.hashCode()` and, in principle, expect to get any one of the $2^32$ 
+possible 32-bit values with equal likelihood. Java provides `hashCode()` implementations that aspire to 
+this functionality for many common types (including `String, Integer, Double, Date, and URL`), but for 
+our own type, we have to try to do it on our own.
+ 
+
+
+
 
 3.5 Applications
 ----------------
