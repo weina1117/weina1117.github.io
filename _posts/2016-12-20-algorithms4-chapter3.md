@@ -603,9 +603,43 @@ possible 32-bit values with equal likelihood. Java provides `hashCode()` impleme
 this functionality for many common types (including `String, Integer, Double, Date, and URL`), but for 
 our own type, we have to try to do it on our own.
  
+We have three primary requirements in implementing a good hash function for a given data type:
+* It should be deterministic—equal keys must produce the same hash value.
+* It should be efficient to compute.
+* It should uniformly distribute the keys.
 
+**Assumption J (uniform hashing assumption)** 
+The hash function that we use uniformly distributes keys among the integer values between $0$ and $M-1$.
 
+![sample post]({{site.baseurl}}/images/algorithms4/hashing2.png)
 
+**Proposition K** 
+In a separate-chaining hash table with $M$ lists and $N$ keys, the probability (under Assumption J) that 
+the number of keys in a list is within a small constant factor of $N/M$ is extremely close to $1$. of 
+$N/M$ is extremely close to $1$. (Assumes an idealistic hash function.) This classical mathematical result 
+is compelling, but it completely depends on Assumption J. Still, in practice, the same behavior occurs.
+
+**Property L**
+In a separate-chaining hash table with $M$ lists and $N$ keys, the number of compares (equality tests) for
+search and insert is proportional to $N/M$.
+
+**Hashing with linear probing**
+Another approach to implementing hashing is to store $N$ key-value pairs in a hash table of size $M > N$, 
+relying on empty entries in the table to help with with collision resolution. Such methods are called 
+open-addressing hashing methods. The simplest open-addressing method is called linear probing: when there 
+is a collision (when we hash to a table index that is already occupied with a key different from the search 
+key), then we just check the next entry in the table (by incrementing the index). There are three possible 
+outcomes:
+
+* key equal to search key: search hit
+* empty position (null key at indexed position): search miss
+* key not equal to search key: try next entry
+
+![sample post]({{site.baseurl}}/images/algorithms4/hashing3.png)
+
+**Proposition M** 
+In a linear-probing has table of size $M$ with $N = α M$ keys, the average number of probes (under Assumption J) 
+is $~ 1/2 (1 + 1 / (1 - α))$ for search hits and $~ 1/2 (1 + 1 / (1 - α)^2)$ for search misses or inserts.
 
 3.5 Applications
 ----------------
