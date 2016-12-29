@@ -98,6 +98,272 @@ public String toString()
 
 {% endhighlight %}
 
+Graph data type
+{% highlight java %}
+
+public class Graph
+{
+	private final int V; // number of vertices
+ 	private int E; // number of edges
+ 	private Bag<Integer>[] adj; // adjacency lists
+ 	public Graph(int V)
+ 	{
+ 		this.V = V; this.E = 0;
+ 		adj = (Bag<Integer>[]) new Bag[V]; // Create array of lists.
+ 		for (int v = 0; v < V; v++) // Initialize all lists
+ 			adj[v] = new Bag<Integer>(); // to empty.
+ 	}
+ 	public Graph(In in)
+ 	{
+ 		this(in.readInt()); // Read V and construct this graph.
+ 		int E = in.readInt(); // Read E.
+ 		for (int i = 0; i < E; i++)
+ 		{	// Add an edge.
+ 			int v = in.readInt(); // Read a vertex,
+ 			int w = in.readInt(); // read another vertex,
+ 			addEdge(v, w); // and add edge connecting them.
+ 		}
+ 	}
+ 	public int V() { return V; }
+ 	public int E() { return E; }
+ 	public void addEdge(int v, int w)
+ 	{
+ 		adj[v].add(w); // Add w to v’s list.
+ 		adj[w].add(v); // Add v to w’s list.
+ 		E++;
+ 	}
+ 	public Iterable<Integer> adj(int v)
+ 	{ return adj[v]; }
+}
+
+{% endhighlight %}
+
+**Order-of-growth performance for typical Graph implementations**
+
+![sample post]({{site.baseurl}}/images/algorithms4/performance1.png)
+
+**Depth-first search**
+
+Depth-first search to find paths in a graph
+
+{% highlight java %}
+public class DepthFirstPaths
+{
+	private boolean[] marked; // Has dfs() been called for this vertex?
+ 	private int[] edgeTo; // last vertex on known path to this vertex
+ 	private final int s; // source
+ 	public DepthFirstPaths(Graph G, int s)
+ 	{
+ 		marked = new boolean[G.V()];
+ 		edgeTo = new int[G.V()];
+ 		this.s = s;
+ 		dfs(G, s);
+ 	}
+ 	private void dfs(Graph G, int v)
+ 	{
+ 		marked[v] = true;
+ 		for (int w : G.adj(v))
+ 			if (!marked[w])
+ 			{
+ 				edgeTo[w] = v;
+ 				dfs(G, w);
+ 			}
+ 	}
+ 	public boolean hasPathTo(int v)
+ 	{ return marked[v]; }
+ 	public Iterable<Integer> pathTo(int v)
+ 	{
+ 		if (!hasPathTo(v)) return null;
+ 		Stack<Integer> path = new Stack<Integer>();
+ 		for (int x = v; x != s; x = edgeTo[x])
+ 			path.push(x);
+ 		path.push(s);
+ 		return path;
+ 	}
+} 
+
+{% endhighlight %}
+
+**Proposition A** 
+DFS marks all the vertices connected to a given source in time proportional to 
+the sum of their degrees.
+
+**Proposition A (continued)**
+DFS allows us to provide clients with a path from a given source to any marked 
+vertex in time proportional its length. 
+
+**Breadth-first search** 
+
+Breadth-first search to find paths in a graph
+
+{% highlight java %}
+public class BreadthFirstPaths
+{
+	private boolean[] marked; // Is a shortest path to this vertex known?
+ 	private int[] edgeTo; // last vertex on known path to this vertex
+ 	private final int s; // source
+ 	public BreadthFirstPaths(Graph G, int s)
+ 	{
+ 		marked = new boolean[G.V()];
+ 		edgeTo = new int[G.V()];
+ 		this.s = s;
+ 		bfs(G, s);
+ 	}
+ 	private void bfs(Graph G, int s)
+ 	{
+ 		Queue<Integer> queue = new Queue<Integer>();
+ 		marked[s] = true; // Mark the source
+ 		queue.enqueue(s); // and put it on the queue.
+ 		while (!q.isEmpty())
+ 		{
+ 			int v = queue.dequeue(); // Remove next vertex from the queue.
+ 			for (int w : G.adj(v))
+ 				if (!marked[w]) // For every unmarked adjacent vertex,
+ 				{
+ 					edgeTo[w] = v; // save last edge on a shortest path,
+ 					marked[w] = true; // mark it because path is known,
+ 					queue.enqueue(w); // and add it to the queue.
+ 				}
+ 		}
+ 	}
+ 	public boolean hasPathTo(int v)
+ 	{	return marked[v]; }
+ 	public Iterable<Integer> pathTo(int v)
+ 	// Same as for DFS Code.
+}
+
+{% endhighlight %}
+
+**Proposition B**
+For any vertex $v$ reachable from $s$, BFS computes a shortest path from $s$ to $v$ 
+(no path from $s$ to $v$ has fewer edges)
+
+**Proposition B (continued)**
+BFS takes time proportional to $V+E$ in the worst case.
+
+**Depth-first search to find connected components in a graph**
+
+{% highlight java %}
+public class CC
+{
+	private boolean[] marked;
+ 	private int[] id;
+ 	private int count;
+ 	public CC(Graph G)
+ 	{
+ 		marked = new boolean[G.V()];
+ 		id = new int[G.V()];
+ 		for (int s = 0; s < G.V(); s++)
+ 			if (!marked[s])
+ 			{
+ 				dfs(G, s);
+ 				count++;
+ 			}
+ 	}
+ 	private void dfs(Graph G, int v)
+ 	{
+ 		marked[v] = true;
+ 		id[v] = count;
+ 		for (int w : G.adj(v))
+ 			if (!marked[w])
+ 				dfs(G, w);
+ 	}
+ 	public boolean connected(int v, int w)
+ 	{	return id[v] == id[w]; }
+ 	public int id(int v)
+ 	{	return id[v]; }
+ 	public int count()
+ 	{	return count; }
+}
+
+{% endhighlight %}
+
+**Proposition C**
+DFS uses preprocessing time and space proportional to $V+E$ to support 
+constant-time connectivity queries in a graph.
+
+**Symbol graph data type**
+
+{% highlight java %}
+public class SymbolGraph
+{
+	private ST<String, Integer> st;                // String -> index
+ 	private String[] keys;                         // index -> String
+ 	private Graph G;                               // the graph
+ 	public SymbolGraph(String stream, String sp)
+ 	{
+ 		st = new ST<String, Integer>();
+ 		In in = new In(stream);                    // First pass
+ 		while (in.hasNextLine())                   // builds the index
+ 		{
+ 			String[] a = in.readLine().split(sp);  // by reading strings
+ 			for (int i = 0; i < a.length; i++)     // to associate each
+ 				if (!st.contains(a[i]))            // distinct string
+ 					st.put(a[i], st.size());       // with an index.
+ 		}
+ 		keys = new String[st.size()];               // Inverted index
+ 		for (String name : st.keys())               // to get string keys
+ 			keys[st.get(name)] = name;              // is an array.
+ 		G = new Graph(st.size());
+ 		in = new In(stream);                        // Second pass
+ 		while (in.hasNextLine())                    // builds the graph
+ 		{
+ 			String[] a = in.readLine().split(sp);   // by connecting the
+ 			int v = st.get(a[0]);                   // first vertex
+ 			for (int i = 1; i < a.length; i++)      // on each line
+ 				G.addEdge(v, st.get(a[i]));         // to all the others.
+ 		}
+ 	}
+ 	public boolean contains(String s)  {	return st.contains(s); }
+ 	public int index(String s)         {	return st.get(s); }
+ 	public String name(int v)          {	return keys[v]; }
+ 	public Graph G()                   {	return G; }
+}
+
+{% endhighlight %}
+
+**Degrees of separation**
+
+{% highlight java %}
+public class DegreesOfSeparation
+{
+	public static void main(String[] args)
+ 	{
+ 		SymbolGraph sg = new SymbolGraph(args[0], args[1]);
+ 		Graph G = sg.G();
+ 		String source = args[2];
+ 		if (!sg.contains(source))
+ 		{	StdOut.println(source + " not in database."); return; }
+ 		int s = sg.index(source);
+ 		BreadthFirstPaths bfs = new BreadthFirstPaths(G, s);
+ 		while (!StdIn.isEmpty())
+ 		{
+ 			String sink = StdIn.readLine();
+ 			if (sg.contains(sink))
+ 			{
+ 				int t = sg.index(sink);
+ 				if (bfs.hasPathTo(t))
+ 					for (int v : bfs.pathTo(t))
+ 						StdOut.println(" " + sg.name(v));
+ 				else StdOut.println("Not connected");
+ 			}
+ 			else StdOut.println("Not in database.");
+ 		}
+ 	}
+}
+
+{% endhighlight%}
+
+(Undirected) graph-processing problems addressed in this section
+|            problem                 |        solution                       |
+|:----------------------------------:|:-------------------------------------:|
+| single-source connectivity               DepthFirstSearch  
+| single-source paths                      DepthFirstPaths 
+| single-source shortest paths             BreadthFirstPaths 
+| connectivity                             CC  
+| cycle detection                          Cycle
+| two-colorability (bipartiteness)         TwoColor 
+
 4.2 Directed Graphs
 -------------------
 
