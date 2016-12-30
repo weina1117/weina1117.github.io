@@ -367,10 +367,339 @@ public class DegreesOfSeparation
 4.2 Directed Graphs
 -------------------
 
+Typical digraph applications
 
+| 	application   |    vertex    |         edge         |
+| ---------------:|:------------:|:--------------------:|
+| food web        | species      | predator-prey        |
+| internet        | content page | hyperlink            |
+| program         | module       | external reference   |
+| cellphone       | phone        | call                 |
+| scholarship     | paper        | citation             |
+| financial       | stock        | transaction          |
+| internet        | machine      | connection           |
+
+**Digraph**
+A directed graph (or digraph) is a set of vertices and a collection of directed edges that 
+each connects an ordered pair of vertices. A directed edge points from the first vertex in 
+the pair and points to the second vertex in the pair. Named `0` through `V-1` for the
+vertices in a V-vertex graph. Ignoring anomalies, there are four different ways in which 
+two vertices might be related in a digraph: no edge; an edge `v->w` from `v` to `w`; an edge `w->v`
+from `w` to `v`; or two edges `v->w` and `w->v`, which indicate connections in both directions. 
+
+**Definitions**
+
+* A self-loop is an edge that connects a vertex to itself.
+* Two edges are parallel if they connect the same ordered pair of vertices.
+* The outdegree of a vertex is the number of edges pointing from it. 
+  The indegree of a vertex is the number of edges pointing to it.
+* A subgraph is a subset of a digraph's edges (and associated vertices) 
+  that constitutes a digraph.
+* A directed path in a digraph is a sequence of vertices in which there is a (directed) edge 
+  pointing from each vertex in the sequence to its successor in the sequence. 
+  A simple path is one with no repeated vertices.
+* A directed cycle is a directed path (with at least one edge) whose first and last vertices 
+  are the same. A simple cycle is a cycle with no repeated edges or vertices (except the 
+  requisite repetition of the first and last vertices).
+* The length of a path or a cycle is its number of edges.
+* A vertex `w` is reachable from a vertex `v` if there exists a directed path from `v` to `w`.
+* Two vertices `v` and `w` are strongly connected if they are mutually reachable: 
+  there is a directed path from `v` to `w` and a directed path from `w` to `v`.
+* A digraph is strongly connected if there is a directed path from every vertex to every other vertex.
+* A digraph that is not strongly connected consists of a set of strongly-connected components, 
+  which are maximal strongly-connected subgraphs.
+* A directed acyclic graph (or DAG) is a digraph with no directed cycles.
+
+Directed graph (digraph) data type
+{% highlight java %}
+public class Digraph
+{
+	private final int V;
+ 	private int E;
+ 	private Bag<Integer>[] adj;
+ 	public Digraph(int V)
+ 	{
+ 		this.V = V;
+ 		this.E = 0;
+ 		adj = (Bag<Integer>[]) new Bag[V];
+ 		for (int v = 0; v < V; v++)
+ 			adj[v] = new Bag<Integer>();
+ 	}
+ 	public int V() { return V; }
+ 	public int E() { return E; }
+ 	public void addEdge(int v, int w)
+ 	{
+ 		adj[v].add(w);
+ 		E++;
+ 	}
+ 	public Iterable<Integer> adj(int v)
+ 	{	return adj[v]; }
+ 	public Digraph reverse()
+ 	{
+ 		Digraph R = new Digraph(V);
+ 		for (int v = 0; v < V; v++)
+ 			for (int w : adj(v))
+ 				R.addEdge(w, v);
+ 		return R;
+ 	}
+}
+{% endhighlight %}
+
+**Reachability in digraphs**
+* Single-source reachability. Given a digraph and a source vertex `s`, support queries
+of the form Is there a directed path from `s` to a given target vertex `v`? 
+
+* Multiple-source reachability. Given a digraph and a set of source vertices, support
+queries of the form Is there a directed path from any vertex in the set to a given
+target vertex `v`? 
+
+* Mark-and-sweep garbage collection. An important application of multiple-source reachability
+is found in typical memory-management systems, including many implementations of Java. 
+
+**Proposition D** 
+DFS marks all the vertices in a digraph reachable from a given set of sources in time 
+proportional to the sum of the outdegrees of the vertices marked.
+
+**Reachability in digraphs**
+
+{% highlight java %}
+public class DirectedDFS
+{
+	private boolean[] marked;
+ 	public DirectedDFS(Digraph G, int s)
+ 	{
+ 		marked = new boolean[G.V()];
+ 		dfs(G, s);
+ 	}
+ 	public DirectedDFS(Digraph G, Iterable<Integer> sources)
+ 	{
+ 		marked = new boolean[G.V()];
+ 		for (int s : sources)
+ 			if (!marked[s]) dfs(G, s);
+ 	}
+ 	private void dfs(Digraph G, int v)
+ 	{
+ 		marked[v] = true;
+ 		for (int w : G.adj(v))
+ 			if (!marked[w]) dfs(G, w);
+ 	}
+ 	public boolean marked(int v)
+ 	{	return marked[v]; }
+ 	public static void main(String[] args)
+ 	{
+ 		Digraph G = new Digraph(new In(args[0]));
+ 		Bag<Integer> sources = new Bag<Integer>();
+ 		for (int i = 1; i < args.length; i++)
+ 			sources.add(Integer.parseInt(args[i]));
+ 	DirectedDFS reachable = new DirectedDFS(G, sources);
+ 	for (int v = 0; v < G.V(); v++)
+ 		if (reachable.marked(v)) StdOut.print(v + " ");
+ 	StdOut.println();
+ 	}
+}
+
+{% endhighlight %}
+
+**Finding a directed cycle**
+
+{% highlight java %}
+public class DirectedCycle
+{
+	private boolean[] marked;
+ 	private int[] edgeTo;
+ 	private Stack<Integer> cycle; // vertices on a cycle (if one exists)
+ 	private boolean[] onStack;    // vertices on recursive call stack
+ 	public DirectedCycle(Digraph G)
+ 	{
+ 		onStack = new boolean[G.V()];
+ 		edgeTo  = new int[G.V()];
+ 		marked  = new boolean[G.V()];
+ 		for (int v = 0; v < G.V(); v++)
+ 			if (!marked[v]) dfs(G, v);
+ 	}
+ 	private void dfs(Digraph G, int v)
+ 	{
+ 		onStack[v] = true;
+ 		marked[v] = true;
+ 		for (int w : G.adj(v))
+ 			if (this.hasCycle()) return;
+ 			else if (!marked[w])
+ 			{	edgeTo[w] = v; dfs(G, w); }
+ 			else if (onStack[w])
+ 			{
+ 				cycle = new Stack<Integer>();
+ 				for (int x = v; x != w; x = edgeTo[x])
+ 					cycle.push(x);
+ 					cycle.push(w);
+ 					cycle.push(v);
+ 			}
+ 		onStack[v] = false;
+ 	}
+ 	public boolean hasCycle()
+ 	{	return cycle != null; }
+ 	public Iterable<Integer> cycle()
+ 	{	return cycle; }
+}
+
+{% endhighlight %}
+
+**Depth-first search vertex ordering in a digraph**
+
+{% highlight java %}
+
+public class DepthFirstOrder
+{
+	private boolean[] marked;
+ 	private Queue<Integer> pre;         // vertices in preorder
+ 	private Queue<Integer> post;        // vertices in postorder
+ 	private Stack<Integer> reversePost; // vertices in reverse postorder
+ 	public DepthFirstOrder(Digraph G)
+ 	{
+ 		pre         = new Queue<Integer>();
+ 		post        = new Queue<Integer>();
+ 		reversePost = new Stack<Integer>();
+ 		marked = new boolean[G.V()];
+ 		for (int v = 0; v < G.V(); v++)
+ 			if (!marked[v]) dfs(G, v);
+ 	}
+ 	private void dfs(Digraph G, int v)
+ 	{
+ 		pre.enqueue(v);
+ 		marked[v] = true;
+ 		for (int w : G.adj(v))
+ 			if (!marked[w])
+ 				dfs(G, w);
+ 	post.enqueue(v);
+ 	reversePost.push(v);
+ 	}
+ 	public Iterable<Integer> pre()
+ 	{	return pre; }
+ 	public Iterable<Integer> post()
+ 	{	return post; }
+ 	public Iterable<Integer> reversePost()
+ 	{	return reversePost; }
+}
+{% endhighlight %}
+
+**Topological sort**
+
+{% highlight java %}
+public class Topological
+{
+	private Iterable<Integer> order;           // topological order
+ 	public Topological(Digraph G)
+ 	{
+ 		DirectedCycle cyclefinder = new DirectedCycle(G);
+ 		if (!cyclefinder.hasCycle())
+ 		{
+ 			DepthFirstOrder dfs = new DepthFirstOrder(G);
+ 			order = dfs.reversePost();
+ 		}
+ 	}
+ 	public Iterable<Integer> order()
+ 	{	return order; }
+ 	public boolean isDAG()
+ 	{	return order == null; }
+ 	public static void main(String[] args)
+ 	{
+ 		String filename = args[0];
+ 		String separator = args[1];
+ 		SymbolDigraph sg = new SymbolDigraph(filename, separator);
+ 		Topological top = new Topological(sg.G());
+ 		for (int v : top.order())
+ 			StdOut.println(sg.name(v));
+ 	}
+}
+
+{% endhighlight %}
+
+**Proposition**
+A digraph has a topological order if and only if it is a DAG.
+
+**Proposition**
+Reverse postorder in a DAG is a topological sort.
+
+**Proposition**
+With depth-first search, we can topologically sort a DAG in time proportional to $V + E$.
+
+Strong connectivity. 
+Strong connectivity is an equivalence relation on the set of vertices:
+* Reflexive: Every vertex `v` is strongly connected to itself.
+* Symmetric: If `v` is strongly connected to `w`, then `w` is strongly connected to `v`.
+* Transitive: If `v` is strongly connected to `w` and `w` is strongly connected to `x`, 
+  then `v` is also strongly connected to `x`.
+
+**Kosaraju’s algorithm for computing strong components**
+
+{% highlight java %}
+public class KosarajuSCC
+{
+	private boolean[] marked;    // reached vertices
+ 	private int[] id;            // component identifiers
+ 	private int count;           // number of strong components
+ 	public KosarajuSCC(Digraph G)
+ 	{
+ 		marked = new boolean[G.V()];
+ 		id = new int[G.V()];
+ 		DepthFirstOrder order = new DepthFirstOrder(G.reverse());
+ 		for (int s : order.reversePost())
+ 			if (!marked[s])
+ 			{	dfs(G, s); count++; }
+ 	}
+ 	private void dfs(Digraph G, int v)
+ 	{
+ 		marked[v] = true;
+ 		id[v] = count;
+ 		for (int w : G.adj(v))
+ 			if (!marked[w])
+ 				dfs(G, w);
+ 	}
+ 	public boolean stronglyConnected(int v, int w)
+ 	{	return id[v] == id[w]; }
+ 	public int id(int v)
+ 	{	return id[v]; }
+ 	public int count()
+ 	{	return count; }
+}
+
+{% endhighlight %}
+
+**Proposition**
+The Kosaraju-Sharir algorithm uses preprocessing time and space proportional to $V + E$ to 
+support constant-time strong connectivity queries in a digraph.
+
+**Transitive closure** 
+The transitive closure of a digraph `G` is another digraph with the same set of vertices, 
+but with an edge from `v` to `w` if and only if `w` is reachable from `v` in `G`.
+
+**Digraph-processing problems addressed in this section**
+
+|                       problem                     |          solution             |
+|:-------------------------------------------------:|:-----------------------------:|
+| single- and multiple-source reachability          |  DirectedDFS                  |
+| single-source directed paths                      |  DepthFirstDirectedPaths      |
+| single-source shortest directed paths             |  BreadthFirstDirectedPaths    |
+| directed cycle detection                          |  DirectedCycle                |
+| depth-first vertex orders                         |  DepthFirstOrder              |
+| precedence-constrained scheduling                 |  Topological                  |
+| topological sort                                  |  Topological                  |
+| strong connectivity                               |  KosarajuSCC                  |
+| all-pairs reachability                            |  TransitiveClosure            |
 
 4.3 Minimum Spanning Trees
 --------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 4.4 Shortest Paths
