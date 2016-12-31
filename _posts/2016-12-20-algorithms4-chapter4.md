@@ -686,6 +686,12 @@ but with an edge from `v` to `w` if and only if `w` is reachable from `v` in `G`
 | strong connectivity                               |  KosarajuSCC                  |
 | all-pairs reachability                            |  TransitiveClosure            |
 
+**The difference between DFS and BFS**
+* DFS use stack, BFS use queue
+* Both have the similar build and control systerm, the only basic difference is how to choose
+the next node. DFS choose the child node as the next node, BFS choose the brother node.
+* DFS can find the result quickly, BSF can find the optimal answer.
+
 4.3 Minimum Spanning Trees
 --------------------------
 
@@ -755,13 +761,13 @@ version uses space proportional to `V` and time proportional to `E log V` (in th
 Kruskal's algorithm processes the edges in order of their weight values (smallest to largest), taking 
 for the MST (coloring black) each edge that does not form a cycle with edges previously added, stopping 
 after adding `V-1` edges. The black edges form a forest of trees that evolves gradually into a single
- tree, the MST.
+tree, the MST.
 
 ![sample post]({{site.baseurl}}/images/algorithms4/kruskals.png)
 
 **Proposition**
 Kruskal's algorithm computes the MST of any connected edge-weighted graph with `E` edges and `V` vertices
- using extra space proportional to `E` and time proportional to `E log E` (in the worst case).
+using extra space proportional to `E` and time proportional to `E log E` (in the worst case).
 
 4.4 Shortest Paths
 ------------------
