@@ -689,18 +689,79 @@ but with an edge from `v` to `w` if and only if `w` is reachable from `v` in `G`
 4.3 Minimum Spanning Trees
 --------------------------
 
+**Minimum spanning tree**
+An edge-weighted graph is a graph where we associate weights or costs with each edge. 
+A minimum spanning tree (MST) of an edge-weighted graph is a spanning tree whose weight (the 
+sum of the weights of its edges) is no larger than the weight of any other spanning tree.
 
+**Assumptions**
+* The graph is connected. 
+* The edge weights are not necessarily distances. 
+* The edge weights may be zero or negative. 
+* The edge weights are all different. 
 
+**Underlying principles**
+* Adding an edge that connects two vertices in a tree creates a unique cycle.
+* Removing an edge from a tree breaks it into two separate subtrees.
 
+**Proposition. (Cut property)**
+Given any cut in an edge-weighted graph (with all edge weights distinct), the crossing edge 
+of minimum weight is in the MST of the graph.
 
+**Proposition. (Greedy MST algorithm)** 
+The following method colors black all edges in the the MST of any connected edge-weighted 
+graph with `V` vertices: Starting with all edges colored gray, find a cut with no black edges, 
+color its minimum-weight edge black, and continue until `V-1` edges have been colored black.
 
+**Prim's algorithm**
+Prim's algorithm works by attaching a new edge to a single growing tree at each step: Start 
+with any vertex as a single-vertex tree; then add `V-1` edges to it, always taking next (coloring 
+black) the minimum-weight edge that connects a vertex on the tree to a vertex not yet on the tree 
+(a crossing edge for the cut defined by tree vertices).
 
+How do we (efficiently) find the crossing edge of minimal weight?
+* Lazy implementation. 
+We use a priority queue to hold the crossing edges and find one of minimal weight. Each time that 
+we add an edge to the tree, we also add a vertex to the tree. To maintain the set of crossing 
+edges, we need to add to the priority queue all edges from that vertex to any non-tree vertex. But 
+we must do more: any edge connecting the vertex just added to a tree vertex that is already on the 
+priority queue now becomes ineligible (it is no longer a crossing edge because it connects two tree 
+vertices). The lazy implementation leaves such edges on the priority queue, deferring the 
+ineligibility test to when we remove them.
 
+![sample post]({{site.baseurl}}/images/algorithms4/lazy.png)
 
+* Eager implementation. 
+To improve the lazy implementation of Prim's algorithm, we might try to delete ineligible edges 
+from the priority queue, so that the priority queue contains only the crossing edges. But we can 
+eliminate even more edges. The key is to note that our only interest is in the minimal edge from 
+each non-tree vertex to a tree vertex. When we add a vertex `v` to the tree, the only possible change 
+with respect to each non-tree vertex `w` is that adding `v` brings `w` closer than before to the tree. In 
+short, we do not need to keep on the priority queue all of the edges from `w` to vertices tree—we just 
+need to keep track of the minimum-weight edge and check whether the addition of `v` to the tree 
+necessitates that we update that minimum (because of an edge `v-w` that has lower weight), which we can 
+do as we process each edge in s adjacency list. In other words, we maintain on the priority queue just 
+one edge for each non-tree vertex: the shortest edge that connects it to the tree.
 
+![sample post]({{site.baseurl}}/images/algorithms4/eager.png)
 
+**Proposition**
+Prim's algorithm computes the MST of any connected edge-weighted graph. The lazy version of Prim's 
+algorithm uses space proportional to `E` and time proportional to `E log E` (in the worst case) to 
+compute the MST of a connected edge-weighted graph with `E` edges and `V` vertices; the eager 
+version uses space proportional to `V` and time proportional to `E log V` (in the worst case).
 
+**Kruskal's algorithm** 
+Kruskal's algorithm processes the edges in order of their weight values (smallest to largest), taking 
+for the MST (coloring black) each edge that does not form a cycle with edges previously added, stopping 
+after adding `V-1` edges. The black edges form a forest of trees that evolves gradually into a single
+ tree, the MST.
 
+![sample post]({{site.baseurl}}/images/algorithms4/kruskals.png)
+
+**Proposition**
+Kruskal's algorithm computes the MST of any connected edge-weighted graph with `E` edges and `V` vertices
+ using extra space proportional to `E` and time proportional to `E log E` (in the worst case).
 
 4.4 Shortest Paths
 ------------------
