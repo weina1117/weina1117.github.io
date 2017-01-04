@@ -855,6 +855,7 @@ The Bellman-Ford algorithm solves the single-source shortest-paths problem from 
 (or finds a negative cycle reachable from `s`) for any edge-weighted digraph with `V` vertices and `E` edges, 
 in time proportional to `E V` and extra space proportional to `V`, in the worst case.
 
+Performance characteristics of shortest-paths algorithms
 
-
+![sample post]({{site.baseurl}}/images/algorithms4/performance.png)
 
