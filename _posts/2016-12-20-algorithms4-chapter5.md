@@ -130,8 +130,165 @@ for (int i = 0; i < N; i++)
 	a[i] = aux[i];
 {% endhighlight %}
 
+**LSD string sort**
+This algorithms is through key-index couting to sort strings, which from the right to the 
+left of the string. Each characters as the key (similiar as the number of the group), we count
+`W`(the length of the strings) times to sort them. This only could deal with the string we
+have known the length of strings and all they have the same lenghtn, and it takes extra 
+space for `count[]` and `aux[]`.
+
+{% highlight java %}
+public class LSD
+{
+	public static void sort(String[] a, int W)
+ 	{ // Sort a[] on leading W characters.
+ 		int N = a.length;
+ 		int R = 256;
+ 		String[] aux = new String[N];
+ 		for (int d = W-1; d >= 0; d--)
+ 		{ // Sort by key-indexed counting on dth char.
+ 			int[] count = new int[R+1]; // Compute frequency counts.
+ 			for (int i = 0; i < N; i++)
+ 				count[a[i].charAt(d) + 1]++;
+ 			for (int r = 0; r < R; r++) // Transform counts to indices.
+ 				count[r+1] += count[r];
+ 			for (int i = 0; i < N; i++) // Distribute.
+ 				aux[count[a[i].charAt(d)]++] = a[i];
+ 			for (int i = 0; i < N; i++) // Copy back.
+ 				a[i] = aux[i];
+ 		}
+ 	}
+}
+
+{% endhighlight %}
+
 **Proposition B**
 LSD string sort stably sorts fixed-length strings
+
+**MSD string sort**
+This is a general-purpose string sort, where strings are not necessarily all the same length, 
+we consider the characters in left-to-right order. We know that strings that start with a 
+should appear before strings that start with b, and so forth. The natural way to implement
+this idea is a recursive method known as most-significant-digit-first (MSD) string sort. We 
+use key-indexed counting to sort the strings according to their first character, then (recursively) 
+sort the subarrays corresponding to each character.
+
+We need to pay particular attention to reaching the ends of strings in MSD string sort. 
+To convert from an indexed string character to an array index that returns -1 if the specified 
+character position is past the end of the string. Then, we just add 1 to each returned value,this 
+convention means that we have `R+1` different possible. Since we use key-index counting is still need 
+an extra space, so `int count[] = new int[R + 2]`. We create a new count array after every recursive 
+processes, so this methord will consum large space to deal with. We can chose insertion sort to handle
+small arrarys to avoid the cost in examing all the characters that we have been examined before.
+Space for the `count[]` array, on the other hand, can be an important issue (because it cannot 
+be created outside the recursive `sort()` method) rather `an aux[]`.
+
+the results of experiments where using a cutoff to insertion sort for subarrays of size 10 or 
+less decreases the running time by a factor of 10 for a typical application.
+
+A second pitfall for MSD string sort is that it can be relatively slow for subarrays containing large
+numbers of equal keys. If a substring occurs sufficiently often that the cutoff for small subarrays 
+does not apply, then a recursive call is needed for every character in all of the equal keys. The worst 
+case for MSD string sorting is when all keys are equal. 
+
+{% highlight java %}
+public class MSD
+{
+	private static int R = 256; // radix
+ 	private static final int M = 15; // cutoff for small subarrays
+ 	private static String[] aux; // auxiliary array for distribution
+ 	private static int charAt(String s, int d)
+ 	{	if (d < s.length()) return s.charAt(d); else return -1; }
+ 	public static void sort(String[] a)
+ 	{
+ 		int N = a.length;
+ 		aux = new String[N];
+ 		sort(a, 0, N-1, 0);
+ 	}
+ 	private static void sort(String[] a, int lo, int hi, int d)
+ 	{ // Sort from a[lo] to a[hi], starting at the dth character.
+ 		if (hi <= lo + M)
+ 		{ Insertion.sort(a, lo, hi, d); return; }
+ 		int[] count = new int[R+2]; // Compute frequency counts.
+ 		for (int i = lo; i <= hi; i++)
+ 			count[charAt(a[i], d) + 2]++;
+ 		for (int r = 0; r < R+1; r++) // Transform counts to indices.
+ 			count[r+1] += count[r];
+ 		for (int i = lo; i <= hi; i++) // Distribute.
+ 			aux[count[charAt(a[i], d) + 1]++] = a[i];
+ 		for (int i = lo; i <= hi; i++) // Copy back.
+ 			a[i] = aux[i - lo];
+ 		// Recursively sort for each character value.
+ 		for (int r = 0; r < R; r++)
+ 			sort(a, lo + count[r], lo + count[r+1] - 1, d+1);
+ 	}
+}
+{% endhighlight %}
+
+**Proposition C**
+To sort N random strings from an R-character alphabet, MSD string sort 
+examines about $N log_R N$ characters, on average.
+
+**Proposition D**
+MSD string sort uses between $8N+3R$ and $~7wN+3WR$ array accesses to sort N strings 
+taken from an R-character alphabet, where w is the average
+string length.
+
+**Proposition D (continued)**
+To sort N strings taken from an R-character alphabet,the amount of space needed 
+by MSD string sort is proportional to R times the length of the longest 
+string (plus N ), in the worst case.
+
+**Three-way string quicksort**
+We can also adapt quicksort to MSD string sorting by using 3-way partitioning on the 
+leading character of the keys, moving to the next character on only the middle
+subarray (keys with leading character equal to the partitioning character). 
+
+3-way string quicksort adapts well to handling equal keys, keys with long common
+prefixes, keys that fall into a small range, and small arrays—all situations where 
+MSD string sort runs slowly. Of particular importance is that the partitioning adapts
+to different kinds of structure in different parts of the key. Also, like quicksort, 
+3-way string quicksort does not use extra space (other than the implicit stack
+to support recursion), which is an important advantage over MSD string sort, which
+requires space for both frequency counts and an auxiliary array. 
+
+
+Three-way string quicksort
+{% highlight java %}
+public class Quick3string
+{
+	private static int charAt(String s, int d)
+ 	{ if (d < s.length()) return s.charAt(d); else return -1; }
+ 	public static void sort(String[] a)
+ 	{ sort(a, 0, a.length - 1, 0); }
+ 	private static void sort(String[] a, int lo, int hi, int d)
+ 	{
+ 		if (hi <= lo) return;
+ 		int lt = lo, gt = hi;
+ 		int v = charAt(a[lo], d);
+ 		int i = lo + 1;
+ 		while (i <= gt)
+ 		{
+ 			int t = charAt(a[i], d);
+ 			if (t < v) exch(a, lt++, i++);
+ 			else if (t > v) exch(a, i, gt--);
+ 			else i++;
+ 		}
+ 		// a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]
+ 		sort(a, lo, lt-1, d);
+ 		if (v >= 0) sort(a, lt, gt, d+1);
+ 		sort(a, gt+1, hi, d);
+ 	}
+}
+
+{% endhighlignt %}
+
+**Proposition E**
+To sort an array of N random strings, 3-way string quicksort uses $~ 2N ln N$ 
+character compares, on the average. 
+
+**The important characteristics of the string-sort algorithms summary**
+![sample post]({{site.baseurl}}/images/algorithms4/stringsortperformance.png)
 
 5.2 Trses
 ---------
