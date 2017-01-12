@@ -292,7 +292,64 @@ character compares, on the average.
 
 5.2 Trses
 ---------
+Trses sorting is amazing that has high performance in typical applications, even for huge tables:
+* Search hits take time proportional to the length of the search key.
+* Search misses involve examining only a few characters.
 
+![sample post]({{site.baseurl}}/images/algorithms4/anatomyofatrie.png)
+
+**Basicproperties**
+
+* There is no characters for the root. The other nodes have one characters for each node.
+* Pathing from the root to one node will get the strings.
+* All the sub-nodes of each node has their different strings. 
+
+![sample post]({{site.baseurl}}/images/algorithms4/triesearch.png)
+
+![sample post]({{site.baseurl}}/images/algorithms4/triesearchexamples.png)
+
+The insert, delete and find implementations are very easy by one level loop, that is for `i`th 
+times loop can find the sub-trie through the characters before `i`. And then to deal with
+such implementations, respectively.
+
+![sample post]({{site.baseurl}}/images/algorithms4/trieconstructiontrace.png)
+
+Trie symbol table
+{% highlight java %}
+public class TrieST<Value>
+{
+	private static int R = 256; // radix
+	private Node root;          // root of trie
+	private static class Node
+	{
+		private Object val;
+        private Node[] next = new Node[R];
+    }
+	public Value get(String key)
+	{
+        Node x = get(root, key, 0);
+        if (x == null) return null;
+        return (Value) x.val;
+	}
+    private Node get(Node x, String key, int d)
+    {  // Return value associated with key in the subtrie rooted at x.
+        if (x == null) return null;
+        if (d == key.length()) return x;
+        char c = key.charAt(d); // Use dth key char to identify subtrie.
+        return get(x.next[c], key, d+1);
+	}
+    public void put(String key, Value val)
+    {  root = put(root, key, val, 0);  }
+    private Node put(Node x, String key, Value val, int d)
+    {  // Change value associated with key if in subtrie rooted at x.
+        if (x == null) x = new Node();
+        if (d == key.length()) {  x.val = val; return x; }
+        char c = key.charAt(d); // Use dth key char to identify subtrie.
+        x.next[c] = put(x.next[c], key, val, d+1);
+        return x;
+	} 
+}
+{% endhighlight %}
 
 
 5.3 Substring search
