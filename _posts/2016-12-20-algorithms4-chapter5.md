@@ -290,7 +290,7 @@ character compares, on the average.
 **The important characteristics of the string-sort algorithms summary**
 ![sample post]({{site.baseurl}}/images/algorithms4/stringsortperformance.png)
 
-5.2 Trses
+5.2 Tries
 ---------
 Trses sorting is amazing that has high performance in typical applications, even for huge tables:
 * Search hits take time proportional to the length of the search key.
@@ -351,9 +351,156 @@ public class TrieST<Value>
 }
 {% endhighlight %}
 
+Wildcard match in a trie
+{% highlight java %}  
+public Iterable<String> keysThatMatch(String pat)
+{
+	Queue<String> q = new Queue<String>();
+    collect(root, "", pat, q);
+    return q;
+}
+public void collect(Node x, String pre, String pat, Queue<String> q) {
+     int d = pre.length();
+     if (x == null) return;
+     if (d == pat.length() && x.val != null) q.enqueue(pre);
+     if (d == pat.length()) return;
+     char next = pat.charAt(d);
+     for (char c = 0; c < R; c++)
+        if (next == '.' || next == c)
+           collect(x.next[c], pre + c, pat, q);
+}
+{% endhighlight %}
+
+Matching the longest prefix of a given string
+{% highlight java %}
+public String longestPrefixOf(String s)
+{
+	int length = search(root, s, 0, 0);
+    return s.substring(0, length);
+}
+private int search(Node x, String s, int d, int length) {
+     if (x == null) return length;
+     if (x.val != null) length = d;
+     if (d == s.length()) return length;
+     char c = s.charAt(d);
+     return search(x.next[c], s, d+1, length);
+}
+{% endhighlight %}
+
+**Ternary search tries (TSTs)**
+Ternary search trie(TSTs) help us to avoid the excessive space cost associated with R-way tries. 
+In a TST, each node has a character, three links, and a value. The three links correspond to 
+keys whose current characters are less than, equal to, or greater than the node’s character. 
+
+![sample post]({{site.baseurl}}/images/algorithms4/tst.png)
+
+The search,insert and delete implementations:
+* To search, compare the first character in the key with the character at the root. 
+  If it is less, we take the left link; 
+  if it is greater, we take the right link; and 
+  if it is equal, we take the middle link and move to the next search key character. 
+  In each case, we apply the algorithm recursively. We terminate with a search miss if we encounter 
+  a null link or if the node where the search ends has a null value, and we terminate with a search 
+  hit if the node where the search ends has a non-null value. 
+* To insert a new key, we search, then add new nodes for the characters in the tail of the key, just 
+  as we did for tries.
+* To delete, in a TST, we have to use BST node deletion to remove the node corresponding to the character.
+
+TST symbol table 
+{% highlight java %}
+public class TST<Value>
+{
+	 
+	private Node root;          // root of trie
+	private class Node   
+	{
+	   char c;                 // character
+	   Node left, mid, right;  // left, middle, and right subtries 
+	   Value val;              // value associated with string
+	}
+	public Value get(String key)  // same as for tries (See Trie symbol talbe).
+	private Node get(Node x, String key, int d)
+	{
+	   if (x == null) return null;
+	   char c = key.charAt(d);
+	   if      (c < x.c) return get(x.left,  key, d);
+	   else if (c > x.c) return get(x.right, key, d);
+	   else if (d < key.length() - 1)
+                         return get(x.middle, key, d + 1)
+	   else return x;
+	}
+	public void put(String key, Value val)
+	{  root = put(root, key, val, 0);  }
+	private Node put(Node x, String key, Value val, int d)
+	{
+	   char c = key.charAt(d);
+	   if (x == null) { x = new Node(); x.c = c; }
+	   if      (c < x.c) x.left  = put(x.left,  key, val, d);
+	   else if (c > x.c) x.right = put(x.right, key, val, d);
+	   else if (d < key.length() - 1)
+                         x.mid   = put(x.mid, key, val, d+1);
+	   else x.val = val;
+	return x;
+	}
+}
+{% endhighlight %}
+
+![sample post]({{site.baseurl}}/images/algorithms4/performanceofstringsearch.png)
 
 5.3 Substring search
 --------------------
+
+**Brute Force**
+Brute force is a straightforward approach to solving a problem, usually directly 
+based on the problem statement and definitions of the concepts involved.
+
+Brute-force substring search
+{% highlight java %}
+public static int search(String pat, String txt)
+{
+	int M = pat.length();
+    int N = txt.length();
+    for (int i = 0; i <= N - M; i++)
+    {
+    	int j;
+        for (j = 0; j < M; j++)
+			if (txt.charAt(i+j) != pat.charAt(j))
+            break;
+		if (j == M) return i;  // found
+	}
+    return N;                 // not found
+}
+{% endhighlight %}
+
+Alternate implementation of brute-force substring search (explicit backup)
+
+{% highlight java %}
+public static int search(String pat, String txt)
+{
+	int j, M = pat.length();
+    int i, N = txt.length();
+    for (i = 0, j = 0; i < N && j < M; i++)
+    {
+    	if (txt.charAt(i) == pat.charAt(j)) j++;
+        else { i -= j; j = 0;  }
+     }
+     if (j == M) return i - M;  // found
+     else            return N;  // not found
+}
+{% endhighlight %}
+
+**Knuth-Morris-Pratt substring search**
+The basic idea is whenever we detect a mismatch, we already know some of the 
+characters in the text (since they matched the pattern charac- ters prior to 
+the mismatch). We can take advantage of this information to avoid backing up 
+the text pointer over all those known characters.
+
+
+
+
+
+
+
 
 
 
