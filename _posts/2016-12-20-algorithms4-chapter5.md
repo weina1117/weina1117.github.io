@@ -292,7 +292,7 @@ character compares, on the average.
 
 5.2 Tries
 ---------
-Trses sorting is amazing that has high performance in typical applications, even for huge tables:
+Tries sorting is amazing that has high performance in typical applications, even for huge tables:
 * Search hits take time proportional to the length of the search key.
 * Search misses involve examining only a few characters.
 
@@ -495,14 +495,219 @@ characters in the text (since they matched the pattern charac- ters prior to
 the mismatch). We can take advantage of this information to avoid backing up 
 the text pointer over all those known characters.
 
+The insight of the KMP algorithm is that we can decide ahead of time exactly
+ how to restart the search, because that decision depends only on the pattern.
+
+Knuth-Morris-Pratt substring search
+{% highlight java %}
+public class KMP
+{
+	private String pat;
+    private int[][] dfa;
+    public KMP(String pat)
+    {  // Build DFA from pattern.
+        this.pat = pat;
+        int M = pat.length();
+        int R = 256;
+        dfa = new int[R][M];
+        dfa[pat.charAt(0)][0] = 1;
+        for (int X = 0, j = 1; j < M; j++)
+        {  // Compute dfa[][j].
+           for (int c = 0; c < R; c++)
+              dfa[c][j] = dfa[c][X];                   // Copy mismatch cases.
+           dfa[pat.charAt(j)][j] = j+1;                // Set match case.
+           X = dfa[pat.charAt(j)][X];                  // Update restart state.
+		}
+	}
+    public int search(String txt)
+    {  // Simulate operation of DFA on txt.
+        int i, j, N = txt.length(), M = pat.length();
+        for (i = 0, j = 0; i < N && j < M; i++)
+           j = dfa[txt.charAt(i)][j];
+        if (j == M) return i - M;  // found (hit end of pattern)
+        else        return N;      // not found (hit end of text)
+	}
+
+    public static void main(String[] args)
+	{
+     String pat = args[0];
+     String txt = args[1];
+     KMP kmp = new KMP(pat);
+     StdOut.println("text:    " + txt);
+     int offset = kmp.search(txt);
+     StdOut.print("pattern: ");
+     for (int i = 0; i < offset; i++)
+        StdOut.print(" ");
+     StdOut.println(pat);
+	}
+}
+{% endhighlight %}
+
+**PropositionN**
+Knuth-Morris-Pratt substring search accesses no more than $M+N$ characters to search
+for a pattern of length $M$ in a text of length $N$.
+
+The KMP algorithm provided the linear-time worst-case guarantee. But when backup is easy, 
+we can do significantly better than KMP.
+
+**Boyer-Moore substring search**
+When backup in the text string is not a problem, here is a faster substring-searching method
+by scanning the pattern from right to left when trying to match it against the text.
+
+Boyer-Moore substring search (mismatched character heuristic)
+{% highlight java %}
+public class BoyerMoore
+{
+   private int[] right;
+   private String pat;
+   BoyerMoore(String pat)
+   {	// Compute skip table.
+      this.pat = pat;
+      int M = pat.length();
+      int R = 256;
+      right = new int[R];
+      for (int c = 0; c < R; c++)
+         right[c] = -1;                   // -1 for chars not in pattern
+      for (int j = 0; j < M; j++)         // rightmost position for
+         right[pat.charAt(j)] = j;        //   chars in pattern
+	}
+	public int search(String txt)
+	{	// Search for pattern in txt.
+		int N = txt.length();
+		int M = pat.length();
+		int skip;
+		for (int i = 0; i <= N-M; i += skip)
+		{	// Does the pattern match the text at position i ?
+			skip = 0;
+		   	for (int j = M-1; j >= 0; j--)
+		    	if (pat.charAt(j) != txt.charAt(i+j))
+		    	{
+		        	skip = j - right[txt.charAt(i+j)];
+		        	if (skip < 1) skip = 1;
+		        	break;
+				}
+			if (skip == 0) return i;         // found.   
+		}
+		return N;                            // not found.
+	public static void main(String[] args)
+	{
+		String pat = args[0];
+  	   	String txt = args[1];
+  	   	KMP kmp = new KMP(pat);
+  	   	StdOut.println("text:    " + txt);
+  	   	int offset = kmp.search(txt);
+  	   	StdOut.print("pattern: ");
+  	   	for (int i = 0; i < offset; i++)
+  	   	   StdOut.print(" ");
+  	   	StdOut.println(pat);
+  	}
+}
+{% endhighlight %}
+
+In this substring search algorithm builds a table giving the rightmost occurrence in the 
+pattern of each possible character. The search method scans from right to left in the pattern, 
+skip- ping to align any character causing a mismatch with its rightmost occurrence in the pattern.
 
 
+**PropertyO** 
+On typical inputs, substring search with the Boyer-Moore mismatched character heuristic
+uses $~N/M$ character compares to search for a pattern of length $M$ in a text of length $N$.
 
+**Rabin-Karp fingerprint search** 
+This method is a completely different approach to substring search that is based on hashing. 
+We compute a hash function for the pattern and then look for a match by using the same hash 
+function for each possible M-character substring of the text. If we find a text substring 
+with the same hash value as the pattern, we can check for a match. 
 
+The basic of this method implementation would be much slower than a brute-force search,
+since the process is equivalent to storing the pattern in a hash table, then doing a search for each
+substring of the text, but we do not need to reserve the memory for the hash table because it 
+would have just one entry. Why is slower? Since computing a hash function that involves every character
+is much more expensive than just comparing characters. But if we can do some preprocessing at first, that 
+will be easy to compute hash functions for M-character substrings in constant time.
 
+Basick plan
+![sample post]({{site.baseurl}}/images/algorithms4/rabinkarp1.png)
 
+Horner’s method, applied to modular hashing
+{% highlight java %}
+private long hash(String key, int M)
+{	// Compute hash for key[0..M-1].
+    long h = 0;
+    for (int j = 0; j < M; j++)
+    	h = (R * h + key.charAt(j)) % Q;
+    return h;
+}
+{% endhighlight %}
 
+Key idea.
+The Rabin-Karp method is based on efficiently computing the hash function for position $i+1$ in the text,
+given its value for position $i$. It follows directly from a simple mathematical formulation. The result 
+is that we can effectively move right one position in the text in constant time, whether $M$ is 5 or 100
+or 1,000.
 
+![sample post]({{site.baseurl}}/images/algorithms4/rabinkarp2.png)
+![sample post]({{site.baseurl}}/images/algorithms4/rabinkarp3.png)
+
+Monte Carlo correctness.
+Monte Carlo algorithm that has a guaranteed completion time but fails to output a correct answer with a 
+small probability. The alternative method of checking for a match could be slow (it might amount to the 
+brute-force algorithm, with a very small probability) but is guaranteed correct. Such an algorithm is 
+known as a Las Vegas algorithm.
+
+![sample post]({{site.baseurl}}/images/algorithms4/rabinkarp4.png)
+
+Rabin-Karp fingerprint substring search 
+{% highlight java %}
+public class RabinKarp
+{
+	private String pat;            // pattern (only needed for Las Vegas)
+	private long patHash;          // pattern hash value
+	private int M;                 // pattern length
+	private long Q;                // a large prime
+	private int R = 256;           // alphabet size
+	private long RM;               // R^(M-1) % Q
+	public RabinKarp(String pat)
+	{
+		this.pat = pat;                // save pattern (only needed for Las Vegas)
+		this.M = pat.length();
+		Q = longRandomPrime();
+		RM = 1;                        // See Exercise 5.3.33.
+		for (int i = 1; i <= M-1; i++) 
+	    	RM = (R * RM) % Q;         // Compute R^(M-1) % Q for use
+		patHash = hash(pat, M);        //   in removing leading digit
+	}
+	public boolean check(int i)        // Monte Carlo (See text.)
+	{	return true;  }                // For Las Vegas, check pat vs txt(i..i-M+1).
+
+	private long hash(String key, int M)
+	{	// Compute hash for key[0..M-1].
+	    long h = 0;
+	    for (int j = 0; j < M; j++)
+	        h = (R * h + key.charAt(j)) % Q;
+		return h;
+	}	
+
+	private int search(String txt)
+	{	// Search for hash match in text.
+	    int N = txt.length();
+	    long txtHash = hash(txt, M);
+	    if (patHash == txtHash) return 0;   // Match at beginning.
+	    for (int i = M; i < N; i++)
+	    {	// Remove leading digit, add trailing digit, check for match.
+	    	txtHash = (txtHash + Q - RM*txt.charAt(i-M) % Q) % Q;
+	    	txtHash = (txtHash*R + txt.charAt(i)) % Q;
+	    	if (patHash == txtHash)
+	        	if (check(i - M + 1)) return i - M + 1; // match
+	    }
+	    return N;                                    // no match found
+	}
+}
+{% endhighlight %}
+
+Cost summary for substring search implementations
+
+![sample post]({{site.baseurl}}/images/algorithms4/rabinkarp5.png)
 
 5.4 Regular Expressions
 -----------------------
