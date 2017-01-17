@@ -755,6 +755,39 @@ Set-of-characters descriptors
 | range              | enclosed in [] separated by - | [A-Z] [0-9]                   |
 | complement         | enclosed in [] preceded by ^  | [^AEIOU]\*                    |
  
+Closure shortcuts (for specifying the number of copies of the operand)
+
+|   option  |   notation  | example shortcut for |   in language  |  not in language  |
+|:---------:|:-----------:|:--------------------:|:--------------:|:-----------------:|
+| atleast1  |  +          | (AB)+                |  AB ABABAB     | $\epsilon$ BBBAAA |
+| 0 or 1    |  ?          | (AB)?                | $\epsilon$  AB | any other string  |
+| specic    | count in {} | (AB){3}              | ABABAB         | any other string  |
+| range     | rangein{}   | (AB){1-2}            | AB ABAB        | any other string  |
+
+Typical regular expressions in applications (simplified versionscal)
+
+|       context       |              regular            |    expression matches  |
+|:-------------------:|:-------------------------------:|:----------------------:|
+| substring search    | .\*NEEDLE.\*                    | A HAYSTACK NEEDLE IN   |
+| phone number        | \([0-9]{3}\)\ [0-9]{3}-[0-9]{4} | (800) 867-5309         |
+| Java identier       | [$\_A-Za-z][$_A-Za-z0-9]\*      | Pattern_Matcher        |
+| genome marker       | gcg(cgg|agg)\*ctg               | gcgaggaggcggcggctg     |
+| email address       | [a-z]+@([a-z]+\.)+(edu|com)     | rs@cs.princeton.edu    |
+
+**Nondeterministic Finite-state Automaton (NFA)**
+To handle regular expressions, we need a more powerful abstract machine. Because of 
+the or operation, the automaton cannot determine whether or not the pattern could occur 
+at a given point by examining just one character; indeed, because of closure, it cannot
+even determine how many characters might need to be examined before a mismatch is 
+discovered. The overview of our RE pattern matching algorithm is the nearly the same as
+for KMP:
+* Build the NFA corresponding to the given RE.
+* Simulate the operation of that NFA on the given text.
+Kleene’s Theorem, a fundamental result of theoretical computer science, asserts 
+that there is an NFA corresponding to any given RE (and vice versa). 
+
+
+
 
 
 
