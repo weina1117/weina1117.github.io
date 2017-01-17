@@ -712,6 +712,50 @@ Cost summary for substring search implementations
 5.4 Regular Expressions
 -----------------------
 
+Examples of regular expressions
+|          RE           |            matches          |       does not match      |
+|:---------------------:|:---------------------------:|:-------------------------:|
+| (A|B)(C|D)            |  AC AD BC BD                |  everyotherstring         |
+| A(B|C)\*D             |  AD ABD ACD ABCCBD          |  BCD ADD ABCBC            |
+|A\* | (A\*BA\*BA\*)\*  |  AAA BBAABB BABAAA          |  ABA BBB BABBAAA          |
+
+Definition. A regular expression (RE) is either
+* Empty
+* A single character
+* A regular expression enclosed in parentheses
+* Two or more concatenated regular expressions
+* Two or more regular expressions separated by the or operator (|)
+* A regular expression followed by the closure operator (\*)
+
+Definition (continued). Each RE represents a set of strings, defined as follows:
+* The empty RE represents the empty set of strings, with 0 elements.
+* A character represents the set of strings with one element, itself.
+* An RE enclosed in parentheses represents the same set of strings as the RE
+  without the parentheses.
+* The RE consisting of two concatenated REs represents the cross product of
+  the sets of strings represented by the individual components (all possible strings 
+  that can be formed by taking one string from each and concatenating them, in the 
+  same order as the REs).
+* The RE consisting of the or of two REs represents the union of the sets 
+  represented by the individual components.
+* The RE consisting of the closure of an RE represents (the empty string) or the union
+  of the sets represented by the concatenation of any number of copies of the RE.
+
+Closure
+The closure of a pattern is the language of strings formed by concatenating the pattern
+with itself any number of times (including zero). We denote closure by placing a * after
+the pattern to be repeated. Closure has higher precedence than concatenation.
+
+Set-of-characters descriptors
+
+|        name        |             notation          |            example            |
+|:------------------:|:-----------------------------:|:-----------------------------:|
+| wildcard           | .                             | A.B                           |
+| specied set        | enclosed in []                | [AEIOU]\*                     |
+| range              | enclosed in [] separated by - | [A-Z] [0-9]                   |
+| complement         | enclosed in [] preceded by ^  | [^AEIOU]\*                    |
+ 
+
 
 
 5.5 Data Compression
