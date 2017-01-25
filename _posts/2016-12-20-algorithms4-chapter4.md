@@ -772,3 +772,90 @@ using extra space proportional to `E` and time proportional to `E log E` (in the
 4.4 Shortest Paths
 ------------------
 
+**Shortest paths**
+An edge-weighted digraph is a digraph where we associate weights or costs with each edge. 
+A shortest path from vertex `s` to vertex `t` is a directed path from `s` to `t` with the property that 
+no other such path has a lower weight.
+
+**Properties & Assumptions**
+
+* Paths are directed. 
+A shortest path must respect the direction of its edges.
+* The weights are not necessarily distances. 
+Geometric intuition can be helpful, but the edge weights weights might represent time or cost.
+* Not all vertices need be reachable. 
+If `t` is not reachable from `s`, there is no path at all, and therefore there is no shortest path 
+from `s` to `t`.
+* Negative weights introduce complications. 
+We assume that edge weights are positive (or zero).
+* Shortest paths are normally simple. 
+Here we ignore zero-weight edges that form cycles, so that the shortest paths they find have no cycles.
+* Shortest paths are not necessarily unique. 
+There may be multiple paths of the lowest weight from one vertex to another; we are content to find 
+any one of them.
+* Parallel edges and self-loops may be present. Here we assume that parallel edges are not present 
+and use the notation `v->w` to refer to the edge from `v` to `w`, but our code handles them without 
+difficulty.
+
+**Single-source shortest paths**
+Given an edge-weighted digraph and a designated vertex `s`, a shortest-paths tree (SPT) is a subgraph 
+containing `s` and all the vertices reachable from `s` that forms a directed tree rooted at `s` such 
+that every tree path is a shortest path in the digraph.
+
+The shortest paths with two vertex-indexed arrays:
+* Edges on the shortest-paths tree: `edgeTo[v]` is the the last edge on a shortest path from `s` to `v`.
+* Distance to the source: `distTo[v]` is the length of the shortest path from `s` to `v`.
+
+**Relaxation**
+Our shortest-paths implementations are based on an operation known as relaxation. 
+We initialize `distTo[s]` to `0` and `distTo[v]` to infinity for all other vertices `v`.
+
+* Edge relaxation. 
+To relax an edge `v->w` means to test whether the best known way from `s` to `w` is to go from `s` to `v`,
+then take the edge from `v` to `w`, and, if so, update our data structures.
+* Vertex relaxation. 
+All of our implementations actually relax all the edges pointing from a given vertex.
+
+**Dijkstra's algorithm**
+Dijkstra's algorithm initializing `dist[s]` to `0` and all other `distTo[]` entries to positive infinity. 
+Then, it repeatedly relaxes and adds to the tree a non-tree vertex with the lowest `distTo[]` value, 
+continuing until all vertices are on the tree or no non-tree vertex has a finite `distTo[]` value.
+
+**Proposition**
+Dijkstra's algorithm solves the single-source shortest-paths problem in edge-weighted digraphs with 
+nonnegative weights using extra space proportional to `V` and time proportional to `E log V` (in the worst case).
+
+Acyclic edge-weighted digraphs.
+* Single-source shortest paths problem in edge-weighted DAGs. 
+	It solves the single-source problem in linear time.
+	It handles negative edge weights.
+	It solves related problems, such as finding longest paths.
+* The algorithm combines vertex relaxation with topological sorting. 
+* Single-source longest paths problem in edge-weighted DAGs. 
+* Critical path method. 
+
+**PoProposition**
+By relaxing vertices in topological order, we can solve the single-source shortest-paths and longest-paths 
+problems for edge-weighted DAGs in time proportional to `E + V`.
+
+**Shortest paths in general edge-weighted digraphs**
+* Negative cycles. 
+
+* Bellman-Ford algorithm. 
+* Queue-based Bellman-Ford algorithm.
+* Negative cycle detection. 
+* Arbitrage detection. 
+
+**Proposition**
+There exists a shortest path from `s` to `v` in an edge-weighted digraph if and only if there exists at 
+least one directed path from `s` to `v` and no vertex on any directed path from `s` to `v` is on a negative cycle.
+
+**Proposition**
+The Bellman-Ford algorithm solves the single-source shortest-paths problem from a given source `s` 
+(or finds a negative cycle reachable from `s`) for any edge-weighted digraph with `V` vertices and `E` edges, 
+in time proportional to `E V` and extra space proportional to `V`, in the worst case.
+
+Performance characteristics of shortest-paths algorithms
+
+![sample post]({{site.baseurl}}/images/algorithms4/performance.png)
+
