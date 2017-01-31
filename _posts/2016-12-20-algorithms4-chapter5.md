@@ -281,7 +281,7 @@ public class Quick3string
  	}
 }
 
-{% endhighlignt %}
+{% endhighlight %}
 
 **Proposition E**
 To sort an array of N random strings, 3-way string quicksort uses $~ 2N ln N$ 
